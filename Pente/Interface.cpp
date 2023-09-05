@@ -70,6 +70,21 @@ void Interface::startGame(Board B) {
             //Implement the AI algorithm
             computer.makeMove(B);
         }
+        //Check if the game is over
+
+        //check if the human move was invalid 
+        //if invalid, the human player gets another chance to make a move
+        //if valid, the computer player makes a move
+
+        //check if the computer move was invalid
+        //if invalid, the computer player gets another chance to make a move
+        //if valid, the human player makes a move
+
+         
+
+
+
+
         currentPlayer = (currentPlayer == 'H') ? 'C' : 'H';
     }
 

@@ -15,47 +15,51 @@ HumanPlayer::HumanPlayer(char symbol): Player(symbol) {}
 void HumanPlayer::makeMove(Board& B) {
     // Implement code to get input from the human player and make a move on the Pente board
     // You can prompt the player for input and handle their move here
+    do {
 
-    string move;
-    cout << "enter your move (e.g., K10):";
-    cin >> move;
+        string move;
+        cout << "Enter your move (e.g., K10):";
+        cin >> move;
 
-    if (move.length() < 2) {
-		cout << "Invalid input.Please enter a valid position(e.g., K10) :" << endl;
-		return;
-	}
+        if (move.length() < 2) {
+            cout << "Invalid input.Please enter a valid position(e.g., K10) :" << endl;
+            return;
+        }
 
-    if (move.length() > 4) {
-        cout << "Invalid input.Please enter a valid position(e.g., K10) : " << endl;
-        return;
-    }
+        if (move.length() > 4) {
+            cout << "Invalid input.Please enter a valid position(e.g., K10) : " << endl;
+            return;
+        }
 
-    for(char&c : move) c = toupper(c);
+        for (char& c : move) c = toupper(c);
 
-    if (move == "HELP") {
-        cout<<"Help"<<endl;
-        //Ask for help
-    }
+        if (move == "HELP") {
+            cout << "Help" << endl;
+            //Ask for help
+            return;
+        }
 
-    if (move == "QUIT") {
-		cout << "Quitting the game" << endl;
-		//Quit the game
-		//save the game
-	}
+        if (move == "QUIT") {
+            cout << "Quitting the game" << endl;
+            //Quit the game
+            //save the game
+            return;
+        }
 
-    char colChar = move[0]; // Convert first character to uppercase
-    int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
-    int col = colChar - 'A'; // Convert column character to index
+        char colChar = move[0]; // Convert first character to uppercase
+        int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
+        int col = colChar - 'A'; // Convert column character to index
 
 
-    if (isValidMove(B, row, col)) {
-		B.placeStone(move, 'H');
-        B.printBoard(HumanPlayer::getSymbol());
-	}
-    else {
-		cout<<"Invalid move. Please enter a valid position."<<endl;
-	}   
-
+        if (isValidMove(B, row, col)) {
+            B.placeStone(move, 'H');
+            B.printBoard(HumanPlayer::getSymbol());
+            break;
+        }
+        else {
+            cout << "Invalid move. Please enter a valid position." << endl;
+        }
+    } while (true);
 }
 
 bool Player::isValidMove(const Board& B, int row, int col) const {
@@ -63,7 +67,7 @@ bool Player::isValidMove(const Board& B, int row, int col) const {
 	// This function should return true if the move is valid and false otherwise
 	// Implement the move validation logic
 
-	return row >= 0 && row < 19 && col >= 0 && col < 19 && B.isEmptyCell(row, col);
+	return row >= 1 && row <= 19 && col >= 0 && col < 19 && B.isEmptyCell(row, col);
 }
 
 ComputerPlayer::ComputerPlayer( char symbol) : Player(symbol) {}
