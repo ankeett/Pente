@@ -15,6 +15,6 @@ public:
 
 private:
 	Board B;
-	HumanPlayer human;
-	ComputerPlayer computer;
+	Player* playerList[2];
+	int currentPlayerIndex;
 };

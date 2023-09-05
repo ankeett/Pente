@@ -1,7 +1,12 @@
 #include "Interface.h"
 
 //constructor
-Interface::Interface() : human('W'), computer('B'){}
+Interface::Interface() {
+    //Initialize player pointers
+    playerList[0] = new HumanPlayer('W');
+    playerList[1] = new ComputerPlayer('B');
+    currentPlayerIndex = 0; //Start the game with human
+}
 
 //Destructor
 Interface::~Interface() {
@@ -44,48 +49,37 @@ void Interface::startGame(Board B) {
     //Toss
     srand(time(0));
     int result = rand() % 2;
-    char currentPlayer;
+    //char currentPlayer;
 
-    if (option == result){
-        cout << "You play white" << endl;
-        currentPlayer = 'H';
-        human.setSymbol('W');
-        computer.setSymbol('B');
+    if (option != result){
+        cout << "Computer Wins the Toss" << endl;
+        cout << "You play Black" << endl;
+        Player* temp = playerList[0];
+        playerList[0] = playerList[1];
+        playerList[1] = temp;
+        
     }
     else {
-        cout << "Computer plays white" << endl;
-        currentPlayer = 'C';
-        human.setSymbol('B');
-        computer.setSymbol('W');
+        cout << "You win the Toss" << endl;
+        cout << "You play White" << endl;
     }
 
-    //Create a Player Class and handle the move from there
+    // Set player symbols
+       playerList[0]->setSymbol('W');
+       playerList[1]->setSymbol('B');
+
+    // Create a Player pointer to handle the current player's move
+    Player* currentPlayerPtr = playerList[currentPlayerIndex];
+
     while (true) {
-        if (currentPlayer == 'H') {
-            //Human's turn
-            human.makeMove(B);
-        }
-        else {
-            //Computer's turn
-            //Implement the AI algorithm
-            computer.makeMove(B);
-        }
-        //Check if the game is over
+        // Player's turn
+        currentPlayerPtr->makeMove(B);
 
-        //check if the human move was invalid 
-        //if invalid, the human player gets another chance to make a move
-        //if valid, the computer player makes a move
+        // Check if the game is over (implement this logic)
 
-        //check if the computer move was invalid
-        //if invalid, the computer player gets another chance to make a move
-        //if valid, the human player makes a move
-
-         
-
-
-
-
-        currentPlayer = (currentPlayer == 'H') ? 'C' : 'H';
+        // Switch to the other player's turn
+        currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+        currentPlayerPtr = playerList[currentPlayerIndex];
     }
 
 }
