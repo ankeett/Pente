@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Board.h"
+#include "Player.h"
 
 class Interface {
 public:
@@ -14,4 +15,6 @@ public:
 
 private:
 	Board B;
+	HumanPlayer human;
+	ComputerPlayer computer;
 };

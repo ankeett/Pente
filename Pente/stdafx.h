@@ -8,6 +8,9 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
+#include <cctype>
+
 
 
 using namespace std;

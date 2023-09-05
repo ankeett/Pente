@@ -1,13 +1,11 @@
 #include "Interface.h"
 
 //constructor
-Interface::Interface() {
-
-}
+Interface::Interface() : human('W'), computer('B'){}
 
 //Destructor
 Interface::~Interface() {
-
+	cout << "Game Over" << endl;
 }
 
 void Interface::startMenu() {
@@ -26,15 +24,15 @@ void Interface::startMenu() {
     if (option == 1) {
         startGame(B);
     }
-
-
-
+    else {
+		//Load the game
+	}
 }
 
 void Interface::startGame(Board B) {
     cout << "Starting the Game" << endl;
 
-    B.printBoard();
+    B.printBoard('W'); //Print the board with the column and row labels
     int option;
     
     do {
@@ -46,23 +44,34 @@ void Interface::startGame(Board B) {
     //Toss
     srand(time(0));
     int result = rand() % 2;
-    int currentPlayer;
+    char currentPlayer;
 
     if (option == result){
         cout << "You play white" << endl;
-        currentPlayer = 1;
+        currentPlayer = 'H';
+        human.setSymbol('W');
+        computer.setSymbol('B');
     }
     else {
         cout << "Computer plays white" << endl;
-        currentPlayer = 2;
+        currentPlayer = 'C';
+        human.setSymbol('B');
+        computer.setSymbol('W');
     }
 
     //Create a Player Class and handle the move from there
+    while (true) {
+        if (currentPlayer == 'H') {
+            //Human's turn
+            human.makeMove(B);
+        }
+        else {
+            //Computer's turn
+            //Implement the AI algorithm
+            computer.makeMove(B);
+        }
+        currentPlayer = (currentPlayer == 'H') ? 'C' : 'H';
+    }
 
-
-    
-
-
-    
 }
 
