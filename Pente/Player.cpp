@@ -54,6 +54,11 @@ void HumanPlayer::makeMove(Board& B) {
         if (isValidMove(B, row, col)) {
             B.placeStone(move, 'H');
             B.printBoard(HumanPlayer::getSymbol());
+            if (B.checkFive(row, col, 1)) {
+				cout<<"You win!"<<endl;
+                B.setGameOver(true);
+                return;
+            }
             break;
         }
         else {
@@ -96,6 +101,14 @@ void ComputerPlayer::makeMove(Board& B) {
         else {
 			B.printBoard('W');
         }
+
+        
+        if (B.checkFive(row, col, 2)) {
+            cout << "Computer wins!" << endl;
+            B.setGameOver(true);
+            return;
+        }
+
 
     }
 }

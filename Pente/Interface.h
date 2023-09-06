@@ -13,6 +13,7 @@ public:
 
 
 
+
 private:
 	Board B;
 	Player* playerList[2];

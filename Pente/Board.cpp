@@ -38,53 +38,6 @@ bool Board::isEmptyCell(int row, int col) const {
 }
 
 
-//bool Board::isValidMove(string move) {
-//    if (move.length() < 2) {
-//        cout << "Invalid input.Please enter a valid position(e.g., K10) :" << endl;
-//        return false;
-//    }
-//
-//    if (move.length() > 4) {
-//        cout << "Invalid input.Please enter a valid position(e.g., K10) : " << endl;
-//        return false;
-//    }
-//    // Convert the entire string to lowercase using a loop
-//
-//    if (move.length() == 4) {
-//
-//        for (char& c : move) {
-//            c = std::tolower(c);
-//        }
-//
-//
-//        if (move == "help") {
-//            cout << "Need Help" << endl;
-//            //Ask for help
-//        }
-//
-//        if (move == "quit") {
-//		    cout << "Quitting the game" << endl;
-//		    //Quit the game
-//            //save the game
-//	    }
-//
-//    }
-//    char colChar = toupper(move[0]); // Convert first character to uppercase
-//    int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
-//    int col = colChar - 'A'; // Convert column character to index
-//
-//    if (row >= 0 && row < 19 && col >= 0 && col < 19 && board[row-1][col] == 0) {
-//        // Valid move
-//        // Now you can use 'row' and 'col' to make the move on the board
-//
-//        return true;
-//    }
-//    else {
-//        std::cout << "Invalid move. Please enter a valid position." << std::endl;
-//        return false;
-//    }
-//    return true;
-//}
 
 void Board::placeStone(string move,char symbol) {
     char colChar = toupper(move[0]); // Convert first character to uppercase
@@ -99,3 +52,97 @@ void Board::placeStone(string move,char symbol) {
         board[row - 1][col] = 2;
     }
 }
+
+bool Board::checkFive(int row, int col, int symbol) {
+    //in board 1 is human player and 2 is computer player
+
+    /*cout<<"row"<<row<<"col"<<col<<"symbol"<<symbol<<endl;
+
+    cout<<"board[row-1][col]"<<board[row-1][col]<<endl;*/
+    // Check for five consecutive stones in different directions
+    if (checkDirection(row, col, symbol, -1, 0) ||   // Check left
+        checkDirection(row, col, symbol, 1, 0) ||    // Check right
+        checkDirection(row, col, symbol, 0, -1) ||   // Check up
+        checkDirection(row, col, symbol, 0, 1) ||    // Check down
+        checkDirection(row, col, symbol, -1, -1) ||  // Check up-left
+        checkDirection(row, col, symbol, -1, 1) ||   // Check up-right
+        checkDirection(row, col, symbol, 1, -1) ||   // Check down-left
+        checkDirection(row, col, symbol, 1, 1)) {    // Check down-right
+        return true; // Five consecutive stones found, game is won
+    }
+
+   
+
+    return false; // No five consecutive stones found
+}
+
+bool Board::checkDirection(int row, int col, int symbol, int deltaRow, int deltaCol) {
+    int consecutiveStones = 0;
+
+    while (consecutiveStones < 5) {
+        row += deltaRow;
+        col += deltaCol;
+
+        /*cout<<"row"<<row<<"col"<<col<<"symbol"<<symbol<<endl;
+        cout<<"board[row-1][col]"<<board[row-1][col]<<endl;*/
+
+        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != symbol) {
+            break; // Stone not of the same symbol or out of bounds
+        }
+
+        consecutiveStones++;
+    }
+
+
+
+    return consecutiveStones == 4; // True if five consecutive stones are found
+}
+
+
+
+//check if the human player or computer player has captured the opponent's stone and remove it from the board
+//TODO: check if the opponent's stone is captured and remove it from the board
+bool Board::checkCapture(int row, int col, int symbol) {
+	// Check for capture in different directions
+	if (checkCaptureDirection(row, col, symbol, -1, 0) ||   // Check left
+		checkCaptureDirection(row, col, symbol, 1, 0) ||    // Check right
+		checkCaptureDirection(row, col, symbol, 0, -1) ||   // Check up
+		checkCaptureDirection(row, col, symbol, 0, 1) ||    // Check down
+		checkCaptureDirection(row, col, symbol, -1, -1) ||  // Check up-left
+		checkCaptureDirection(row, col, symbol, -1, 1) ||   // Check up-right
+		checkCaptureDirection(row, col, symbol, 1, -1) ||   // Check down-left
+		checkCaptureDirection(row, col, symbol, 1, 1)) {    // Check down-right
+		return true; // Capture found
+	}
+
+	return false; // No capture found
+}
+
+bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, int deltaCol) {
+	int consecutiveStones = 0;
+
+	while (consecutiveStones < 5) {
+		row += deltaRow;
+		col += deltaCol;
+
+		if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != symbol) {
+			break; // Stone not of the same symbol or out of bounds
+		}
+
+		consecutiveStones++;
+	}
+
+	if (consecutiveStones == 4) {
+		// Check if the stone on the other side is empty
+		row += deltaRow;
+		col += deltaCol;
+
+		if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != 0) {
+			return false; // Stone not empty or out of bounds
+		}
+
+		return true; // Capture found
+	}
+
+	return false; // No capture found
+})

@@ -10,6 +10,9 @@ Interface::Interface() {
 
 //Destructor
 Interface::~Interface() {
+	//Delete player pointers
+	delete playerList[0];
+	delete playerList[1];
 	cout << "Game Over" << endl;
 }
 
@@ -71,7 +74,8 @@ void Interface::startGame(Board B) {
     // Create a Player pointer to handle the current player's move
     Player* currentPlayerPtr = playerList[currentPlayerIndex];
 
-    while (true) {
+    //while the game is not over
+    while (!B.isGameOver()) {
         // Player's turn
         currentPlayerPtr->makeMove(B);
 
@@ -80,6 +84,7 @@ void Interface::startGame(Board B) {
         // Switch to the other player's turn
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
         currentPlayerPtr = playerList[currentPlayerIndex];
+
     }
 
 }
