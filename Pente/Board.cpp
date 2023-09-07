@@ -68,6 +68,14 @@ bool Board::checkFive(int row, int col, int symbol) {
         checkDirection(row, col, symbol, -1, 1) ||   // Check up-right
         checkDirection(row, col, symbol, 1, -1) ||   // Check down-left
         checkDirection(row, col, symbol, 1, 1)) {    // Check down-right
+
+
+        if (symbol == 1) {
+            setWinner(1);
+		}
+		else {
+			setWinner(2);
+		}
         return true; // Five consecutive stones found, game is won
     }
 
@@ -101,9 +109,6 @@ bool Board::checkDirection(int row, int col, int symbol, int deltaRow, int delta
 bool Board::checkCapture(int row, int col, int symbol) {
 	// Check for capture in different directions
 
-    
-
-
 	if (checkCaptureDirection(row, col, symbol, -1, 0) ||   // Check left
 		checkCaptureDirection(row, col, symbol, 1, 0) ||    // Check right
 		checkCaptureDirection(row, col, symbol, 0, -1) ||   // Check up
@@ -112,45 +117,97 @@ bool Board::checkCapture(int row, int col, int symbol) {
 		checkCaptureDirection(row, col, symbol, -1, 1) ||   // Check up-right
 		checkCaptureDirection(row, col, symbol, 1, -1) ||   // Check down-left
 		checkCaptureDirection(row, col, symbol, 1, 1)) {    // Check down-right
+
+        //save the captured count for the human and computer player
+        if(symbol == 1)
+			setHumanCaptures(getHumanCaptures() + 1);
+		else
+            setComputerCaptures(getComputerCaptures() + 1);
+
+        
+      
 		return true; // Capture found
 	}
 
 	return false; // No capture found
 }
 
+//bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, int deltaCol) {
+//    int opponentSymbol = (symbol == 1) ? 2 : 1; // Determine the opponent's symbol
+//    int consecutiveOpponentStones = 0;
+//    int totalOpponentStones = 0;
+//
+//    bool captured = false; // True if a capture is found
+//
+//    // Move one step in the specified direction
+//    row += deltaRow;
+//    col += deltaCol;
+//
+//     //Check for opponent's stones in the specified direction
+//    while (consecutiveOpponentStones < 2) {
+//        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row][col] != opponentSymbol) {
+//            break; // Stone not of the opponent's symbol or out of bounds
+//        }
+//
+//        consecutiveOpponentStones++;
+//        row += deltaRow;
+//        col += deltaCol;
+//    }
+//
+//    if (consecutiveOpponentStones == 2) {
+//        captured = true;
+//
+//        //reset the board to empty cell
+//        row -= deltaRow;
+//        col -= deltaCol;
+//
+//        for (int i = 0; i < 2; i++) {
+//			board[row][col] = 0;
+//			row -= deltaRow;
+//			col -= deltaCol;
+//		}
+//    }
+//
+//    return captured;
+//}
+
 bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, int deltaCol) {
     int opponentSymbol = (symbol == 1) ? 2 : 1; // Determine the opponent's symbol
+
     int consecutiveOpponentStones = 0;
 
-    bool captured = false; // True if a capture is found
-
-    // Move one step in the specified direction
-    row += deltaRow;
-    col += deltaCol;
-
-    // Check for opponent's stones in the specified direction
     while (consecutiveOpponentStones < 2) {
+        row += deltaRow;
+        col += deltaCol;
+
         if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != opponentSymbol) {
             break; // Stone not of the opponent's symbol or out of bounds
         }
 
         consecutiveOpponentStones++;
-        row += deltaRow;
-        col += deltaCol;
     }
 
     if (consecutiveOpponentStones == 2) {
-        captured = true;
+        // Two consecutive opponent stones found, now check for player's stone
+        row += deltaRow;
+        col += deltaCol;
 
-        //reset the board to empty cell
-        row -= deltaRow;
-        col -= deltaCol;
+        if (row >= 0 && row < 19 && col >= 0 && col < 19 && board[row-1][col] == symbol) {
+            // Three stones in a row: opponent-opponent-player
+            // Reset the board to empty cells for the two opponent stones
+            row -= deltaRow * 2;
+            col -= deltaCol * 2;
 
-        for (int i = 0; i < 2; i++) {
-			board[row-1][col] = 0;
-			row -= deltaRow;
-			col -= deltaCol;
-		}
+            for (int i = 0; i < 2; i++) {
+                board[row-1][col] = 0;
+                row += deltaRow;
+                col += deltaCol;
+            }
+
+            return true; // Capture found
+        }
     }
-    return captured;
+
+    return false; // No capture found
 }
+

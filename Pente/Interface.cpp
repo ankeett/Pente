@@ -85,7 +85,55 @@ void Interface::startGame(Board B) {
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
         currentPlayerPtr = playerList[currentPlayerIndex];
 
+
+        //check scores
+       /* if (B.getWinner() != 0) {
+			cout << "Game Over" << endl;
+			cout << "Player " << B.getWinner() << " wins" << endl;
+            break;
+        }*/
+
+        //calculate scores
+
+        calculateScores(B);
+
+		// Print the board
+        printScores();
+
+    }
+}
+
+void Interface :: calculateScores(Board& B) {
+     if(B.getHumanCaptures() == 5 || B.getComputerCaptures() == 5){
+			cout << "Game Over" << endl;
+			if(B.getHumanCaptures() == 5)
+				cout << "You win!" << endl;
+			else
+				cout << "Computer wins" << endl;
+			B.setGameOver(true);
+		}
+
+
+        // Print the scores
+        cout << "Human Captures: " << B.getHumanCaptures() << endl;
+        cout << "Computer Captures: " << B.getComputerCaptures() << endl;
+
+        setHumanScore(B.getHumanCaptures());
+        setComputerScore(B.getComputerCaptures());
+
+        if (B.getWinner() != 0) {
+            if (B.getWinner() == 1) {
+                setHumanScore(getHumanScore() + 5);
+            }
+			else {
+				setComputerScore(getComputerScore() + 5);
+        }
     }
 
+}
+
+void Interface::printScores() const{
+    cout << "Human Score: " << getHumanScore() << endl;
+    cout << "Computer Score: " << getComputerScore() << endl;
 }
 

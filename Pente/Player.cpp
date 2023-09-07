@@ -62,7 +62,7 @@ void HumanPlayer::makeMove(Board& B) {
 
             if (B.checkCapture(row, col, 1)) {
                 B.printBoard(HumanPlayer::getSymbol());
-                //increment the score
+                
 
 
 				cout<<"You captured a stone!"<<endl;

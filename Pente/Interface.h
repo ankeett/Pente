@@ -29,6 +29,24 @@ public:
 	}
 
 
+	//captures
+	/*int getHumanCaptures() const {
+		return humanCaptures;
+	}
+
+	int getComputerCaptures() const {
+		return computerCaptures;
+	}
+
+	void setHumanCaptures(int captures) {
+		humanCaptures = captures;
+	}
+
+	void setComputerCaptures(int captures) {
+		computerCaptures = captures;
+	}*/
+	void calculateScores(Board& B);
+	void printScores() const;
 
 private:
 	Board B;
@@ -38,4 +56,8 @@ private:
 	//scores
 	int humanScore = 0;
 	int computerScore = 0;
+
+	
+
+
 };
