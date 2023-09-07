@@ -59,7 +59,15 @@ void HumanPlayer::makeMove(Board& B) {
                 B.setGameOver(true);
                 return;
             }
-            break;
+
+            if (B.checkCapture(row, col, 1)) {
+                B.printBoard(HumanPlayer::getSymbol());
+                //increment the score
+
+
+				cout<<"You captured a stone!"<<endl;
+			}
+            break; // Valid move, break out of the loop
         }
         else {
             cout << "Invalid move. Please enter a valid position." << endl;
@@ -82,33 +90,58 @@ void ComputerPlayer::makeMove(Board& B) {
     // This function should generate a valid move for the computer
     // Implement the AI move logic
 
-    int row, col;
+    do {
+        string move;
+        cout << "Computer, Enter your move (e.g., K10):";
+        cin >> move;
 
-    row = rand() % 19 + 1;
-    col = rand() % 19;
-
-    // Convert the random row and col to a move string
-    char colChar = 'A' + col; // Convert col to a character ('A' to 'S')
-    std::string move = std::string(1, colChar) + std::to_string(row); // Combine colChar and row
+        for (char& c : move) c = toupper(c);
 
 
-    if (isValidMove(B, row, col)) {
-        cout<<"Computer's move: "<<move<<endl;
-        B.placeStone(move, 'C');
-        if (ComputerPlayer::getSymbol() == 'W') {
-            B.printBoard('B');
-		}
-        else {
-			B.printBoard('W');
+        //int row, col;
+
+        //row = rand() % 19 + 1;
+        //col = rand() % 19;
+
+        //// Convert the random row and col to a move string
+        //char colChar = 'A' + col; // Convert col to a character ('A' to 'S')
+        //std::string move = std::string(1, colChar) + std::to_string(row); // Combine colChar and row
+
+        char colChar = move[0]; // Convert first character to uppercase
+        int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
+        int col = colChar - 'A'; // Convert column character to index
+
+
+        if (isValidMove(B, row, col)) {
+            cout << "Computer's move: " << move << endl;
+            B.placeStone(move, 'C');
+            if (ComputerPlayer::getSymbol() == 'W') {
+                B.printBoard('B');
+            }
+            else {
+                B.printBoard('W');
+            }
+
+
+            if (B.checkFive(row, col, 2)) {
+                cout << "Computer wins!" << endl;
+                B.setGameOver(true);
+                return;
+            }
+
+            if (B.checkCapture(row, col, 2)) {
+                if (ComputerPlayer::getSymbol() == 'W') {
+                    B.printBoard('B');
+                }
+                else {
+                    B.printBoard('W');
+                }
+                cout << "Computer captured a stone!" << endl;
+            }
+
+
+            break; // Break out of the loop
+
         }
-
-        
-        if (B.checkFive(row, col, 2)) {
-            cout << "Computer wins!" << endl;
-            B.setGameOver(true);
-            return;
-        }
-
-
-    }
+    } while (true);
 }

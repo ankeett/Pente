@@ -83,16 +83,12 @@ bool Board::checkDirection(int row, int col, int symbol, int deltaRow, int delta
         row += deltaRow;
         col += deltaCol;
 
-        /*cout<<"row"<<row<<"col"<<col<<"symbol"<<symbol<<endl;
-        cout<<"board[row-1][col]"<<board[row-1][col]<<endl;*/
-
-        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != symbol) {
+        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != symbol) { 
             break; // Stone not of the same symbol or out of bounds
         }
 
         consecutiveStones++;
     }
-
 
 
     return consecutiveStones == 4; // True if five consecutive stones are found
@@ -104,6 +100,10 @@ bool Board::checkDirection(int row, int col, int symbol, int deltaRow, int delta
 //TODO: check if the opponent's stone is captured and remove it from the board
 bool Board::checkCapture(int row, int col, int symbol) {
 	// Check for capture in different directions
+
+    
+
+
 	if (checkCaptureDirection(row, col, symbol, -1, 0) ||   // Check left
 		checkCaptureDirection(row, col, symbol, 1, 0) ||    // Check right
 		checkCaptureDirection(row, col, symbol, 0, -1) ||   // Check up
@@ -119,30 +119,38 @@ bool Board::checkCapture(int row, int col, int symbol) {
 }
 
 bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, int deltaCol) {
-	int consecutiveStones = 0;
+    int opponentSymbol = (symbol == 1) ? 2 : 1; // Determine the opponent's symbol
+    int consecutiveOpponentStones = 0;
 
-	while (consecutiveStones < 5) {
-		row += deltaRow;
-		col += deltaCol;
+    bool captured = false; // True if a capture is found
 
-		if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != symbol) {
-			break; // Stone not of the same symbol or out of bounds
+    // Move one step in the specified direction
+    row += deltaRow;
+    col += deltaCol;
+
+    // Check for opponent's stones in the specified direction
+    while (consecutiveOpponentStones < 2) {
+        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != opponentSymbol) {
+            break; // Stone not of the opponent's symbol or out of bounds
+        }
+
+        consecutiveOpponentStones++;
+        row += deltaRow;
+        col += deltaCol;
+    }
+
+    if (consecutiveOpponentStones == 2) {
+        captured = true;
+
+        //reset the board to empty cell
+        row -= deltaRow;
+        col -= deltaCol;
+
+        for (int i = 0; i < 2; i++) {
+			board[row-1][col] = 0;
+			row -= deltaRow;
+			col -= deltaCol;
 		}
-
-		consecutiveStones++;
-	}
-
-	if (consecutiveStones == 4) {
-		// Check if the stone on the other side is empty
-		row += deltaRow;
-		col += deltaCol;
-
-		if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != 0) {
-			return false; // Stone not empty or out of bounds
-		}
-
-		return true; // Capture found
-	}
-
-	return false; // No capture found
-})
+    }
+    return captured;
+}

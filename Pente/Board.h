@@ -22,6 +22,7 @@ public:
 	}
 	bool checkCapture(int row, int col, int symbol);
 	bool checkCaptureDirection(int row, int col, int symbol, int deltaRow, int deltaColumn);
+
 private:
 	int board[19][19] = { 0 };
 	bool gameOver = false;

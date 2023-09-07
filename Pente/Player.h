@@ -15,7 +15,6 @@ protected:
 	bool isValidMove(const Board& B, int row, int col) const;
 
 private:
-
 	char symbol;
 };
 
