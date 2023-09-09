@@ -1,77 +1,36 @@
 #include "Interface.h"
 
 //constructor
-Interface::Interface() {
-    //Initialize player pointers
-    playerList[0] = new HumanPlayer('W');
-    playerList[1] = new ComputerPlayer('B');
-    currentPlayerIndex = 0; //Start the game with human
+Interface::Interface(Player* playerList[2]) {
+    this->playerList[0] = playerList[0];
+	this->playerList[1] = playerList[1];
 }
 
 //Destructor
 Interface::~Interface() {
-	//Delete player pointers
-	delete playerList[0];
-	delete playerList[1];
-	cout << "Game Over" << endl;
+
 }
 
 void Interface::startMenu() {
 
-	cout << "Welcome to Pente" << endl;
+	cout<<"Round " << endl; 
 
-    int option;
-
-    do {
-        cout << "Choose an option:" << endl;
-        cout << " 1. Start the Game" << endl;
-        cout << " 2. Continue the Game" << endl;
-        cin >> option;
-    } while (option != 1 && option != 2);
-
-    if (option == 1) {
-        startGame(B);
-    }
-    else {
-		//Load the game
-	}
+    startGame(B);
 }
 
 void Interface::startGame(Board B) {
     cout << "Starting the Game" << endl;
 
     B.printBoard('W'); //Print the board with the column and row labels
-    int option;
     
-    do {
-    cout << "Toss:" << endl;
-    cout << "Choose 0 for Head and 1 for Tails" << endl;
-    cin >> option;
-    } while (option != 0 && option != 1);
-
-    //Toss
-    srand(time(0));
-    int result = rand() % 2;
-    //char currentPlayer;
-
-    if (option != result){
-        cout << "Computer Wins the Toss" << endl;
-        cout << "You play Black" << endl;
-        Player* temp = playerList[0];
-        playerList[0] = playerList[1];
-        playerList[1] = temp;
-        
-    }
-    else {
-        cout << "You win the Toss" << endl;
-        cout << "You play White" << endl;
-    }
-
-    // Set player symbols
-       playerList[0]->setSymbol('W');
-       playerList[1]->setSymbol('B');
-
     // Create a Player pointer to handle the current player's move
+        int currentPlayerIndex;
+        cout<<playerList[0]->getSymbol()<<endl;
+       if(playerList[0]->getSymbol() == 'W')
+		   currentPlayerIndex = 0;
+	   else
+		   currentPlayerIndex = 1;
+
     Player* currentPlayerPtr = playerList[currentPlayerIndex];
 
     //while the game is not over
@@ -123,9 +82,11 @@ void Interface :: calculateScores(Board& B) {
 
         if (B.getWinner() != 0) {
             if (B.getWinner() == 1) {
+                setWinner(1);
                 setHumanScore(getHumanScore() + 5);
             }
 			else {
+                setWinner(2);
 				setComputerScore(getComputerScore() + 5);
         }
     }
@@ -137,3 +98,7 @@ void Interface::printScores() const{
     cout << "Computer Score: " << getComputerScore() << endl;
 }
 
+int Interface::sendWinner(Board& B) {
+    //1 is human, 2 is computer
+    return B.getWinner();
+}

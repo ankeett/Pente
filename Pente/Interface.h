@@ -5,7 +5,7 @@
 
 class Interface {
 public:
-	Interface();
+	Interface(Player * playerList[2]);
 	~Interface();
 
 	void startMenu();
@@ -28,36 +28,28 @@ public:
 		computerScore = score;
 	}
 
-
-	//captures
-	/*int getHumanCaptures() const {
-		return humanCaptures;
-	}
-
-	int getComputerCaptures() const {
-		return computerCaptures;
-	}
-
-	void setHumanCaptures(int captures) {
-		humanCaptures = captures;
-	}
-
-	void setComputerCaptures(int captures) {
-		computerCaptures = captures;
-	}*/
 	void calculateScores(Board& B);
 	void printScores() const;
+
+	int sendWinner(Board& B);
+
+	void setWinner(int winner) {
+		this->winner = winner;
+	}
+
+	int getWinner() const {
+		return winner;
+	}
 
 private:
 	Board B;
 	Player* playerList[2];
-	int currentPlayerIndex;
 
 	//scores
 	int humanScore = 0;
 	int computerScore = 0;
 
 	
-
+	int winner = 0;
 
 };

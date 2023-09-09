@@ -6,6 +6,7 @@
 class Player {
 public:
 	Player(char symbol);
+	virtual ~Player(); //default destructor
 
 	virtual void makeMove(Board& B) = 0; //pure virtual function
 	char getSymbol() const;
@@ -21,6 +22,7 @@ private:
 class HumanPlayer : public Player {
 public:
 	HumanPlayer(char symbol);
+	~HumanPlayer();
 
 	void makeMove(Board& B) override;
 };
@@ -28,6 +30,7 @@ public:
 class ComputerPlayer :public Player {
 public:
 	ComputerPlayer(char symbol);
+	~ComputerPlayer();
 
 	void makeMove(Board& B) override;
 };

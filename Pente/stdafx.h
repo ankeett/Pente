@@ -10,6 +10,7 @@
 #include <ctime>
 #include <iomanip>
 #include <cctype>
+#include <vector>
 
 
 

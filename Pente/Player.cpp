@@ -2,6 +2,9 @@
 
 Player::Player( char symbol) :  symbol(symbol) {}
 
+Player::~Player() {}
+
+
 
 char Player::getSymbol() const {
     return symbol;
@@ -11,6 +14,13 @@ void Player::setSymbol(char newSymbol) {
 }
 
 HumanPlayer::HumanPlayer(char symbol): Player(symbol) {}
+HumanPlayer::~HumanPlayer() {
+    // Default destructor is sufficient
+}
+
+ComputerPlayer::~ComputerPlayer() {
+    // Default destructor is sufficient
+}
 
 void HumanPlayer::makeMove(Board& B) {
     // Implement code to get input from the human player and make a move on the Pente board

@@ -11,7 +11,7 @@ public:
 
 	bool checkFive(int row,int col, int symbol);
 
-	bool checkDirection(int row, int col, int symbol, int deltaRow, int deltaColumn);
+	int checkDirection(int row, int col, int symbol, int deltaRow, int deltaColumn);
 
 	void setGameOver(bool isOver) {
 		gameOver = isOver;
