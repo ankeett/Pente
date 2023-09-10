@@ -1,8 +1,11 @@
 #include "Player.h"
 
-Player::Player( char symbol) :  symbol(symbol) {}
+Player::Player( char symbol) :  symbol(symbol) {
+
+}
 
 Player::~Player() {}
+
 
 
 
@@ -13,7 +16,10 @@ void Player::setSymbol(char newSymbol) {
     symbol = newSymbol;
 }
 
-HumanPlayer::HumanPlayer(char symbol): Player(symbol) {}
+HumanPlayer::HumanPlayer(char symbol): Player(symbol) {
+
+}
+
 HumanPlayer::~HumanPlayer() {
     // Default destructor is sufficient
 }
@@ -21,6 +27,8 @@ HumanPlayer::~HumanPlayer() {
 ComputerPlayer::~ComputerPlayer() {
     // Default destructor is sufficient
 }
+
+
 
 void HumanPlayer::makeMove(Board& B) {
     // Implement code to get input from the human player and make a move on the Pente board
@@ -93,7 +101,10 @@ bool Player::isValidMove(const Board& B, int row, int col) const {
 	return row >= 1 && row <= 19 && col >= 0 && col < 19 && B.isEmptyCell(row, col);
 }
 
-ComputerPlayer::ComputerPlayer( char symbol) : Player(symbol) {}
+
+
+ComputerPlayer::ComputerPlayer( char symbol) : Player(symbol) {
+}
 
 void ComputerPlayer::makeMove(Board& B) {
     // Implement an AI algorithm for the computer player's move
@@ -101,11 +112,6 @@ void ComputerPlayer::makeMove(Board& B) {
     // Implement the AI move logic
 
     do {
-        string move;
-        cout << "Computer, Enter your move (e.g., K10):";
-        cin >> move;
-
-        for (char& c : move) c = toupper(c);
 
 
         //int row, col;
@@ -114,13 +120,32 @@ void ComputerPlayer::makeMove(Board& B) {
         //col = rand() % 19;
 
         //// Convert the random row and col to a move string
-        //char colChar = 'A' + col; // Convert col to a character ('A' to 'S')
-        //std::string move = std::string(1, colChar) + std::to_string(row); // Combine colChar and row
 
-        char colChar = move[0]; // Convert first character to uppercase
-        int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
-        int col = colChar - 'A'; // Convert column character to index
+        //call strategy
+        //std::pair<int,int> bestMove =  getStrategy().findWinningMove(B, 2);
 
+        //cout<<"Computer's move: "<<bestMove.first<<","<<bestMove.second<<endl;
+
+        Strategy strategy(B,2);
+
+        std::pair<int, int> bestMove = strategy.evaluateAllCases(B, 2);
+        cout<<"Computer's move: "<<bestMove.first<<","<<bestMove.second<<endl;
+
+        //string move;
+        //cout << "Computer, Enter your move (e.g., K10):";
+        //cin >> move;
+
+        //for (char& c : move) c = toupper(c);
+
+        //char colChar = move[0]; // Convert first character to uppercase
+        //int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
+        //int col = colChar - 'A'; // Convert column character to index
+
+        int row = bestMove.first;
+        int col = bestMove.second;
+
+        char colChar = 'A' + col; // Convert col to a character ('A' to 'S')
+        std::string move = std::string(1, colChar) + std::to_string(row); // Combine colChar and row
 
         if (isValidMove(B, row, col)) {
             cout << "Computer's move: " << move << endl;

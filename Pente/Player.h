@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "Board.h"
+#include "Strategy.h"
 
 class Player {
 public:
@@ -12,11 +13,13 @@ public:
 	char getSymbol() const;
 	void setSymbol(char newSymbol);
 
+
 protected:
 	bool isValidMove(const Board& B, int row, int col) const;
-
+	
 private:
 	char symbol;
+
 };
 
 class HumanPlayer : public Player {
