@@ -52,9 +52,17 @@ void HumanPlayer::makeMove(Board& B) {
         for (char& c : move) c = toupper(c);
 
         if (move == "HELP") {
-            cout << "Help" << endl;
-            //Ask for help
-            return;
+            Strategy strategy(B, 1);
+
+            pair<int, int> bestCase = strategy.evaluateAllCases(B, 1);
+           	cout << "The best move is " << (char)(bestCase.second + 'A') << bestCase.first << endl;
+			
+            cin.clear();
+            cout<<"Enter your move (e.g., K10):";
+            cin >> move;
+
+            for (char& c : move) c = toupper(c);
+            
         }
 
         if (move == "QUIT") {

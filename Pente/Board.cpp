@@ -138,8 +138,8 @@ bool Board::checkFive(int row, int col, int symbol) {
     int consecutiveSum = 0;
 
     // Check for five consecutive stones in vertical direction (up and down)
-    consecutiveSum += checkDirection(row, col, symbol, 0, -1); // Check up
-    consecutiveSum += checkDirection(row, col, symbol, 0, 1);  // Check down
+    consecutiveSum += checkDirection(row, col, symbol, 0, -1,5); // Check up
+    consecutiveSum += checkDirection(row, col, symbol, 0, 1,5);  // Check down
 
     if (consecutiveSum >= 4) {
         setWinner(symbol);
@@ -148,8 +148,8 @@ bool Board::checkFive(int row, int col, int symbol) {
 
     // Check for five consecutive stones in horizontal direction (left and right)
     consecutiveSum = 0;
-    consecutiveSum += checkDirection(row, col, symbol, -1, 0); // Check left
-    consecutiveSum += checkDirection(row, col, symbol, 1, 0);  // Check right
+    consecutiveSum += checkDirection(row, col, symbol, -1, 0,5); // Check left
+    consecutiveSum += checkDirection(row, col, symbol, 1, 0,5);  // Check right
 
     if (consecutiveSum >= 4) {
         setWinner(symbol);
@@ -158,8 +158,8 @@ bool Board::checkFive(int row, int col, int symbol) {
 
     // Check for five consecutive stones in diagonal direction (left-up and right-down)
     consecutiveSum = 0;
-    consecutiveSum += checkDirection(row, col, symbol, -1, -1); // Check left-up
-    consecutiveSum += checkDirection(row, col, symbol, 1, 1);   // Check right-down
+    consecutiveSum += checkDirection(row, col, symbol, -1, -1,5); // Check left-up
+    consecutiveSum += checkDirection(row, col, symbol, 1, 1,5);   // Check right-down
 
     if (consecutiveSum >= 4) {
         setWinner(symbol);
@@ -168,8 +168,8 @@ bool Board::checkFive(int row, int col, int symbol) {
 
     // Check for five consecutive stones in diagonal direction (left-down and right-up)
     consecutiveSum = 0;
-    consecutiveSum += checkDirection(row, col, symbol, -1, 1);  // Check left-down
-    consecutiveSum += checkDirection(row, col, symbol, 1, -1);  // Check right-up
+    consecutiveSum += checkDirection(row, col, symbol, -1, 1,5);  // Check left-down
+    consecutiveSum += checkDirection(row, col, symbol, 1, -1,5);  // Check right-up
 
     if (consecutiveSum >= 4) {
         setWinner(symbol);
@@ -179,16 +179,18 @@ bool Board::checkFive(int row, int col, int symbol) {
     return false; // No five consecutive stones found
 }
 
-int Board::checkDirection(int row, int col, int symbol, int deltaRow, int deltaCol) {
+int Board::checkDirection(int row, int col, int symbol, int deltaRow, int deltaCol,int count) {
     int consecutiveStones = 0;
-    int r = row;
+    int r = row-1;
     int c = col;
 
-    while (consecutiveStones < 4) {
+    count = count - 1;
+
+    while (consecutiveStones < count) {
         r += deltaRow;
         c += deltaCol;
 
-        if (r < 0 || r >= 19 || c < 0 || c >= 19 || board[r-1][c] != symbol) {
+        if (r < 0 || r >= 19 || c < 0 || c >= 19 || board[r][c] != symbol) {
             break; // Stone not of the same symbol or out of bounds
         }
 
@@ -196,6 +198,52 @@ int Board::checkDirection(int row, int col, int symbol, int deltaRow, int deltaC
     }
 
     return consecutiveStones;
+}
+
+
+bool Board::checkFour(int row, int col, int symbol) {
+    int consecutiveSum = 0;
+
+    // Check for five consecutive stones in vertical direction (up and down)
+    consecutiveSum += checkDirection(row, col, symbol, 0, -1, 4); // Check up
+    consecutiveSum += checkDirection(row, col, symbol, 0, 1, 4);  // Check down
+
+    if (consecutiveSum >= 3) {
+        setWinner(symbol);
+        return true;
+    }
+
+    // Check for five consecutive stones in horizontal direction (left and right)
+    consecutiveSum = 0;
+    consecutiveSum += checkDirection(row, col, symbol, -1, 0, 4); // Check left
+    consecutiveSum += checkDirection(row, col, symbol, 1, 0, 4);  // Check right
+
+    if (consecutiveSum >= 3) {
+        setWinner(symbol);
+        return true;
+    }
+
+    // Check for five consecutive stones in diagonal direction (left-up and right-down)
+    consecutiveSum = 0;
+    consecutiveSum += checkDirection(row, col, symbol, -1, -1, 4); // Check left-up
+    consecutiveSum += checkDirection(row, col, symbol, 1, 1, 4);   // Check right-down
+
+    if (consecutiveSum >= 3) {
+        setWinner(symbol);
+        return true;
+    }
+
+    // Check for five consecutive stones in diagonal direction (left-down and right-up)
+    consecutiveSum = 0;
+    consecutiveSum += checkDirection(row, col, symbol, -1, 1, 4);  // Check left-down
+    consecutiveSum += checkDirection(row, col, symbol, 1, -1, 4);  // Check right-up
+
+    if (consecutiveSum >= 3) {
+        setWinner(symbol);
+        return true;
+    }
+
+    return false; // No five consecutive stones found
 }
 
 
@@ -274,11 +322,13 @@ bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, in
 
     int consecutiveOpponentStones = 0;
 
+    row -= 1;
+
     while (consecutiveOpponentStones < 2) {
         row += deltaRow;
         col += deltaCol;
 
-        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row-1][col] != opponentSymbol) {
+        if (row < 0 || row >= 19 || col < 0 || col >= 19 || board[row][col] != opponentSymbol) {
             break; // Stone not of the opponent's symbol or out of bounds
         }
 
@@ -290,14 +340,14 @@ bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, in
         row += deltaRow;
         col += deltaCol;
 
-        if (row >= 0 && row < 19 && col >= 0 && col < 19 && board[row-1][col] == symbol) {
+        if (row >= 0 && row < 19 && col >= 0 && col < 19 && board[row][col] == symbol) {
             // Three stones in a row: opponent-opponent-player
             // Reset the board to empty cells for the two opponent stones
             row -= deltaRow * 2;
             col -= deltaCol * 2;
 
             for (int i = 0; i < 2; i++) {
-                board[row-1][col] = 0;
+                board[row][col] = 0;
                 row += deltaRow;
                 col += deltaCol;
             }
@@ -309,3 +359,47 @@ bool Board::checkCaptureDirection(int row, int col, int symbol, int deltaRow, in
     return false; // No capture found
 }
 
+int Board::calculateConsecutiveCount(int row, int col, int playerSymbol) {
+    int consecutiveCount = 0;
+    
+
+    // Define directions for checking consecutive stones (horizontal, vertical, diagonal)
+    const int directions[4][2] = { {1, 0}, {0, 1}, {1, 1}, {1, -1} };
+
+    // Iterate through the four directions
+    for (const auto& dir : directions) {
+        int dirRow = dir[0];
+        int dirCol = dir[1];
+
+        // Check in both forward and backward directions
+        for (int dirSign = -1; dirSign <= 1; dirSign += 2) {
+            int count = 0;
+
+            // Iterate in the current direction
+            for (int step = 1; step <= 4; step++) { // Check up to 4 stones in a row
+                int newRow = row + dirRow * dirSign * step;
+                int newCol = col + dirCol * dirSign * step;
+
+                // Check if the new position is within the board boundaries
+                if (newRow >= 0 && newRow < 19 && newCol >= 0 && newCol < 19) {
+                    if (board[newRow][newCol] == playerSymbol) {
+                        count++;
+                    }
+                    else {
+                        break; // Stop checking in this direction
+                    }
+                }
+                else {
+                    break; // Stop checking in this direction (out of bounds)
+                }
+            }
+
+            // Update the consecutive count
+            if (count > consecutiveCount) {
+                consecutiveCount = count;
+            }
+        }
+    }
+
+    return consecutiveCount;
+}

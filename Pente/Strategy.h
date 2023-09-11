@@ -23,6 +23,10 @@ private:
 	pair<int, int> captureOpponent(Board B, int playerSymbol);
 	pair<int, int> defendCapture(Board B, int playerSymbol);
 	pair<int, int> randomMove(Board B, int playerSymbol);
+	pair<int, int> defendFour(Board B, int playerSymbol); 
+	pair<int, int> maxConsecutive(Board B, int playerSymbol);
+	pair<int, int> controlCenter(Board B, int playerSymbol);
+
 	Board board;
 	int playerSymbol;
 
