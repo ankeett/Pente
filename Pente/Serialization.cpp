@@ -263,12 +263,25 @@ void Serialization::writeIntoFile(Board& B) {
 				}
 			}
 			else {
-				file << '.';
+				file << 'O';
 			}
 		}
 
 		file << endl;
-	}	
+	}
+
+	file <<"Human: "<<endl;
+	file <<"Captured pairs: "<<getHumanCaptures()<<endl;
+	file <<"Score: "<<getHumanScore()<<endl;
+	file << endl;
+
+	file <<"Computer: "<<endl;
+	file <<"Captured pairs: "<<getComputerCaptures()<<endl;
+	file <<"Score: "<<getComputerScore()<<endl;
+
+	file << endl;
+	string color = (getHumanColor() == 'W') ? "White" : "Black";
+	file <<"Next Player: "<<getNextPlayer()<<" - "<< color <<endl;
 
 
 }

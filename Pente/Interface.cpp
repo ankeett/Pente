@@ -119,13 +119,18 @@ void Interface::startGame(Board& B) {
 void Interface::quitGame(Board& B) {
 	// Save the game
 	Serialization s(B);
+    s.setComputerCaptures(B.getComputerCaptures());
+    s.setHumanCaptures(B.getHumanCaptures());   
+    s.setComputerScore(getComputerScore());
+    s.setHumanScore(getHumanScore());
+
+
 	s.writeIntoFile(B);
 
 	// Print the scores
 	
 
 	// Announce the winner
-	cout << "Player " << B.getWinner() << " wins" << endl;
 }
 
 void Interface :: calculateScores(Board& B) {
