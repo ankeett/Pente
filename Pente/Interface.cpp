@@ -14,18 +14,67 @@ Interface::~Interface() {
 void Interface::startMenu() {
 
 	cout<<"Round " << endl; 
-
+    B.printBoard('W'); //Print the board with the column and row labels
     startGame(B);
 }
 
-void Interface::startGame(Board B) {
-    cout << "Starting the Game" << endl;
+void Interface::continueMenu() {
+	cout << "Continue the Game" << endl;
+	continueGame(B);
 
-    B.printBoard('W'); //Print the board with the column and row labels
+
+}
+
+void Interface::continueGame(Board& B) {
+    Serialization s(B);
+    s.readBoard(B);
+
+
+    //set the players in the player list
+    //the player with the white stone is the first player
+    //the white stone is playerList[0]
+    //the construtor has the playerList[0] as the human player
+    //the constructor has the playerList[1] as the computer player
+    //if the human player is white, then the human player is playerList[0]
+    //if the human player is black, then the human player is playerList[1]
+
+    if (s.getHumanColor() == 'W') {
+		//player 1 is human
+	}
+    else {
+		Player* temp = playerList[0];
+        playerList[0] = playerList[1];
+        playerList[1] = temp;
+	}
+
+    //set the symbol
+    playerList[0]->setSymbol('W');
+    playerList[1]->setSymbol('B');
+
+
+    //set the scores and captures
+    B.setHumanCaptures(s.getHumanCaptures());
+    B.setComputerCaptures(s.getComputerCaptures());
+
+    setHumanScore(s.getHumanScore());
+    setComputerScore(s.getComputerScore());
+
+    //get the scores and captures
+    cout<< "Human Captures: " << B.getHumanCaptures() << endl;
+    cout<< "Computer Captures: " << B.getComputerCaptures() << endl;
+
+    cout<< "Human Score: " << getHumanScore() << endl;
+    cout<< "Computer Score: " << getComputerScore() << endl;
+    
+    //find the next player and set the symbol
+    startGame(B);
+
+}
+
+void Interface::startGame(Board& B) {
     
     // Create a Player pointer to handle the current player's move
         int currentPlayerIndex;
-        cout<<playerList[0]->getSymbol()<<endl;
        if(playerList[0]->getSymbol() == 'W')
 		   currentPlayerIndex = 0;
 	   else
@@ -38,8 +87,12 @@ void Interface::startGame(Board B) {
         // Player's turn
         currentPlayerPtr->makeMove(B);
 
-        // Check if the game is over (implement this logic)
-
+        //check if the currentPlayer wants to quit
+        if (currentPlayerPtr->getQuit() == true) {
+			quitGame(B);
+            B.setGameOver(true);
+			return;
+		}
         // Switch to the other player's turn
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
         currentPlayerPtr = playerList[currentPlayerIndex];
@@ -52,14 +105,27 @@ void Interface::startGame(Board B) {
             break;
         }*/
 
-        //calculate scores
 
+
+        //calculate scores
         calculateScores(B);
 
 		// Print the board
         printScores();
 
     }
+}
+
+void Interface::quitGame(Board& B) {
+	// Save the game
+	Serialization s(B);
+	s.writeIntoFile(B);
+
+	// Print the scores
+	
+
+	// Announce the winner
+	cout << "Player " << B.getWinner() << " wins" << endl;
 }
 
 void Interface :: calculateScores(Board& B) {
@@ -88,8 +154,8 @@ void Interface :: calculateScores(Board& B) {
 			else {
                 setWinner(2);
 				setComputerScore(getComputerScore() + 5);
-        }
-    }
+            }
+         }
 
 }
 

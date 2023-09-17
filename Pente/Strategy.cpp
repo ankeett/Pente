@@ -13,7 +13,7 @@ Strategy::~Strategy() {
 
 std::pair<int, int> Strategy::findWinningMove(Board B, int playerSymbol) {
     // Iterate through the entire game board
-    for (int row = 0; row < 19; row++) {
+    for (int row = 1; row <= 19; row++) {
         for (int col = 0; col < 19; col++) {
             // Check if the current cell is empty
             if (B.isEmptyCell(row,col)) {
@@ -45,7 +45,7 @@ std::pair<int, int> Strategy::defendWinningMove(Board B, int playerSymbol) {
     int opponentSymbol = (playerSymbol == 1) ? 2 : 1;
 
     // Iterate through the entire game board
-    for (int row = 0; row < 19; row++) {
+    for (int row = 1; row <= 19; row++) {
         for (int col = 0; col < 19; col++) {
 			// Check if the current cell is empty
             if (B.isEmptyCell(row, col)) {
@@ -76,7 +76,7 @@ pair<int, int> Strategy::captureOpponent(Board B, int playerSymbol) {
     	int opponentSymbol = (playerSymbol == 1) ? 2 : 1;
 
 	// Iterate through the entire game board
-        for (int row = 0; row < 19; row++) {
+        for (int row = 1; row <= 19; row++) {
             for (int col = 0; col < 19; col++) {
 			// Check if the current cell is empty
                 if (B.isEmptyCell(row, col)) {
@@ -109,7 +109,7 @@ pair<int, int> Strategy::defendCapture(Board B, int playerSymbol) {
 	int opponentSymbol = (playerSymbol == 1) ? 2 : 1;
 
 	// Iterate through the entire game board
-	for (int row = 0; row < 19; row++) {
+	for (int row = 1; row <= 19; row++) {
 		for (int col = 0; col < 19; col++) {
 			// Check if the current cell is empty
 			if (B.isEmptyCell(row, col)) {
@@ -202,7 +202,7 @@ pair<int, int> Strategy::defendFour(Board B, int playerSymbol) {
 
 
 	// Iterate through the entire game board
-	for (int row = 0; row < 19; row++) {
+	for (int row = 1; row <= 19; row++) {
 		for (int col = 0; col < 19; col++) {
 			// Check if the current cell is empty
 			if (B.isEmptyCell(row, col)) {
@@ -236,7 +236,7 @@ pair<int, int> Strategy::maxConsecutive(Board B, int playerSymbol) {
 	pair<int, int> bestPosition = make_pair(-1, -1); // Initialize to a default value
 
 	// Iterate through the entire game board
-	for (int row = 0; row < 19; row++) {
+	for (int row = 1; row <= 19; row++) {
 		for (int col = 0; col < 19; col++) {
 			// Check if the current cell is empty
 			if (B.isEmptyCell(row, col)) {

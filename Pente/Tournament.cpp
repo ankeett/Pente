@@ -1,5 +1,6 @@
 #include "Tournament.h"
 
+
 Tournament::Tournament()
 {
 	playerList[0] = new HumanPlayer('W');
@@ -53,8 +54,63 @@ void Tournament::run() {
 		startGame();
 	}
 	else {
-		//Load the game
+		continueGame();
+
 	}
+
+}
+
+void Tournament::continueGame() {
+	//first we continue the game 
+	// if user chooses to play more, we start the game
+	bool isFirstGame = true;
+
+	while (true) {	
+		Interface game(playerList);
+		if (isFirstGame) {
+			game.continueMenu();
+			isFirstGame = false;
+		}
+		else {
+			game.startMenu();
+		}
+		//add the scores
+		setHumanScores(getHumanScores() + game.getHumanScore());
+		setComputerScores(getComputerScores() + game.getComputerScore());
+
+		games.push_back(game);
+
+		//ask if they want to continue
+		cout << "Do you want to continue? (y/n)" << endl;
+		char choice;
+		cin >> choice;
+
+		choice = tolower(choice);
+
+		if (choice != 'y') {
+			break;
+		}
+
+		//swap the players if the computer won the game and the player wants to continue
+		//the winner of the game will play first in the next game
+		cout << "getLastWinner() " << getLastWinner() << endl;
+		cout << "game.getWinner() " << game.getWinner() << endl;
+		if (getLastWinner() != game.getWinner()) {
+			Player* temp = playerList[0];
+			playerList[0] = playerList[1];
+			playerList[1] = temp;
+		}
+		// Set the symbols for the next game
+		playerList[0]->setSymbol('W');
+		playerList[1]->setSymbol('B');
+
+		//set the last winner
+		setLastWinner(game.getWinner());
+	}
+
+
+	//announce the winner
+	announceWinner();
 
 }
 	void Tournament::startGame() {
@@ -96,7 +152,10 @@ void Tournament::run() {
 			cout << "Do you want to continue? (y/n)" << endl;
 			char choice;
 			cin >> choice;
-			if (choice == 'n') {
+			
+			choice = tolower(choice);
+
+			if (choice != 'y') {
 				break;
 			}
 

@@ -51,6 +51,11 @@ public:
 	void setBoard(int row, int col, int symbol) {
 		board[row-1][col] = symbol;
 	}
+
+	int getBoard(int row, int col) const {
+		return board[row-1][col];
+	}
+
 	int calculateConsecutiveCount(int row, int col, int playerSymbol);
 
 private:

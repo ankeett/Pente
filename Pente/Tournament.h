@@ -1,6 +1,7 @@
 #pragma once
 #include "Interface.h"
 #include "stdafx.h"
+#include "Serialization.h"
 
 class Tournament {
 public:
@@ -33,6 +34,7 @@ public:
 	}
 
 	void startGame();
+	void continueGame();
 
 	int getLastWinner() const {
 		return lastWinner;

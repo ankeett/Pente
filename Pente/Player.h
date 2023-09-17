@@ -12,13 +12,20 @@ public:
 	virtual void makeMove(Board& B) = 0; //pure virtual function
 	char getSymbol() const;
 	void setSymbol(char newSymbol);
-
+	void hasQuit(bool quit) {
+		quitGame = quit;
+	}
+	bool getQuit() const {
+		return quitGame;
+	}
 
 protected:
 	bool isValidMove(const Board& B, int row, int col) const;
 	
+	
 private:
 	char symbol;
+	bool quitGame;
 
 };
 

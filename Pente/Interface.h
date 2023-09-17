@@ -2,6 +2,7 @@
 
 #include "Board.h"
 #include "Player.h"
+#include "Serialization.h"
 
 class Interface {
 public:
@@ -9,7 +10,9 @@ public:
 	~Interface();
 
 	void startMenu();
-	void startGame(Board B);
+	void continueMenu();
+	void startGame(Board& B);
+	void continueGame(Board& B);
 
 
 	int getHumanScore() const {
@@ -41,14 +44,15 @@ public:
 		return winner;
 	}
 
+	void quitGame(Board& B);
+
 private:
 	Board B;
 	Player* playerList[2];
 
 	//scores
 	int humanScore = 0;
-	int computerScore = 0;
-
+	int computerScore = 0;	
 	
 	int winner = 0;
 

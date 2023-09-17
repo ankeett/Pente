@@ -67,14 +67,31 @@ void HumanPlayer::makeMove(Board& B) {
 
         if (move == "QUIT") {
             cout << "Quitting the game" << endl;
-            //Quit the game
-            //save the game
+            hasQuit(true);
             return;
         }
 
+        
+
         char colChar = move[0]; // Convert first character to uppercase
+
+        //check if the first character is a letter
+        /*if (!isalpha(colChar)) {
+			cout << "Invalid input.Please enter a valid position(e.g., K10) : " << endl;
+            continue;
+
+		}*/
+
+
         int row = std::stoi(move.substr(1)); // Convert row number and adjust to 0-based
+
+        //check if the row is a number
+       /* if (!isdigit(row)) {
+            cout << "Invalid input.Please enter a valid position(e.g., K10) : " << endl;
+	        continue;
+        }*/
         int col = colChar - 'A'; // Convert column character to index
+
 
 
         if (isValidMove(B, row, col)) {
@@ -172,7 +189,8 @@ void ComputerPlayer::makeMove(Board& B) {
                 return;
             }
 
-            if (B.checkCapture(row, col, 2)) {
+            //capturing two stones at the same time
+            while (B.checkCapture(row, col, 2)) {
                 if (ComputerPlayer::getSymbol() == 'W') {
                     B.printBoard('B');
                 }
