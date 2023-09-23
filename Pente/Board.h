@@ -55,12 +55,35 @@ public:
 	int getBoard(int row, int col) const {
 		return board[row-1][col];
 	}
+	
+	//setter and getter for move count
+	void setMoveCount(int count) {
+		moveCount = count;
+	}
+
+	int getMoveCount() const {
+		return moveCount;
+	}
+
+	//check if the board is empty and return the total non zero cells
+	int checkEmptyBoard() const {
+		int count = 0;
+		for (int i = 1; i <= 19; i++) {
+			for (int j = 0; j < 19; j++) {
+				if (board[i-1][j] != 0) {
+					cout << board[i - 1][j] << endl;
+					count++;
+				}
+			}
+		}
+		return count;
+	}
 
 	int calculateConsecutiveCount(int row, int col, int playerSymbol);
 
 private:
-	//int board[19][19] = { 0 };
-	int board[19][19] = {
+	int board[19][19] = { 0 };
+	/*int board[19][19] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -80,12 +103,14 @@ private:
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-	};
+	};*/
 
 	bool gameOver = false;
 	
 	int humanCaptures = 0;
 	int computerCaptures = 0;
+
+	int moveCount = 1;
 
 	//scores
 	//captures

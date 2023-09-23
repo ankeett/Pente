@@ -9,7 +9,7 @@ public:
 	Player(char symbol);
 	virtual ~Player(); //default destructor
 
-	virtual void makeMove(Board& B) = 0; //pure virtual function
+	virtual void makeMove(Board& B, int moveCount) = 0; //pure virtual function
 	char getSymbol() const;
 	void setSymbol(char newSymbol);
 	void hasQuit(bool quit) {
@@ -18,14 +18,17 @@ public:
 	bool getQuit() const {
 		return quitGame;
 	}
+	
+	
 
 protected:
 	bool isValidMove(const Board& B, int row, int col) const;
+	bool isThreePointsAway(string initialPos, string nextPos);
 	
 	
 private:
 	char symbol;
-	bool quitGame;
+	bool quitGame  = false;
 
 };
 
@@ -34,7 +37,7 @@ public:
 	HumanPlayer(char symbol);
 	~HumanPlayer();
 
-	void makeMove(Board& B) override;
+	void makeMove(Board& B, int moveCount) override;
 };
 
 class ComputerPlayer :public Player {
@@ -42,5 +45,5 @@ public:
 	ComputerPlayer(char symbol);
 	~ComputerPlayer();
 
-	void makeMove(Board& B) override;
+	void makeMove(Board& B, int moveCount) override;
 };

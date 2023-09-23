@@ -54,7 +54,6 @@ void Serialization::readBoard(Board& B) {
 	}
 	else {
 		if (playerPair.second == "White") {
-		cout<<"I'm here"<<endl;
 			//set the computer stone to white
 			setComputerColor('W');
 			setHumanColor('B');

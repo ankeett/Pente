@@ -16,11 +16,19 @@ void Interface::startMenu() {
 	cout<<"Round " << endl; 
     B.printBoard('W'); //Print the board with the column and row labels
     startGame(B);
+
+    //set the move number
+    B.setMoveCount(1);
+
+
+
 }
 
 void Interface::continueMenu() {
 	cout << "Continue the Game" << endl;
+    
 	continueGame(B);
+
 
 
 }
@@ -28,7 +36,11 @@ void Interface::continueMenu() {
 void Interface::continueGame(Board& B) {
     Serialization s(B);
     s.readBoard(B);
+    //get the move count and set the move count
+    int moveCount = B.checkEmptyBoard();
+    B.setMoveCount(moveCount+1);
 
+    cout<< "Move Count: " << B.getMoveCount() << endl;
 
     //set the players in the player list
     //the player with the white stone is the first player
@@ -39,12 +51,28 @@ void Interface::continueGame(Board& B) {
     //if the human player is black, then the human player is playerList[1]
 
     if (s.getHumanColor() == 'W') {
-		//player 1 is human
-	}
+        //player 1 is human
+        //if next player is human, then set index
+
+        if (s.getNextPlayer() == "Human") {
+            setCurrentPlayerIndex(0);
+        }
+        else {
+            setCurrentPlayerIndex(1);
+        }
+    }
     else {
 		Player* temp = playerList[0];
         playerList[0] = playerList[1];
         playerList[1] = temp;
+
+        if (s.getNextPlayer() == "Human") {
+            setCurrentPlayerIndex(1);
+        }
+        else {
+            setCurrentPlayerIndex(0);
+        }
+
 	}
 
     //set the symbol
@@ -59,6 +87,7 @@ void Interface::continueGame(Board& B) {
     setHumanScore(s.getHumanScore());
     setComputerScore(s.getComputerScore());
 
+
     //get the scores and captures
     cout<< "Human Captures: " << B.getHumanCaptures() << endl;
     cout<< "Computer Captures: " << B.getComputerCaptures() << endl;
@@ -72,24 +101,40 @@ void Interface::continueGame(Board& B) {
 }
 
 void Interface::startGame(Board& B) {
+
+    //check if the board is empty
+    //send the move information in the board to the player
+    //if the board is empty, the first player moves at the centeof the board
+    //if the board is not empty, and the move is 3rd, place the stone 3 blocks away from the center
+       
+
     
     // Create a Player pointer to handle the current player's move
-        int currentPlayerIndex;
+        /*int currentPlayerIndex;
        if(playerList[0]->getSymbol() == 'W')
 		   currentPlayerIndex = 0;
 	   else
-		   currentPlayerIndex = 1;
+		   currentPlayerIndex = 1;*/
 
-    Player* currentPlayerPtr = playerList[currentPlayerIndex];
+    Player* currentPlayerPtr = playerList[getCurrentPlayerIndex()];
 
     //while the game is not over
     while (!B.isGameOver()) {
         // Player's turn
-        currentPlayerPtr->makeMove(B);
+        currentPlayerPtr->makeMove(B, B.getMoveCount());
 
         //check if the currentPlayer wants to quit
         if (currentPlayerPtr->getQuit() == true) {
-			quitGame(B);
+            setQuit(true);
+            cout<<"Do you want to serialize the game? (y/n)" << endl;
+            char answer;
+            cin >> answer;
+
+            answer = tolower(answer);
+
+            if (answer == 'y') {
+                serializeGame(B);
+			}
             B.setGameOver(true);
 			return;
 		}
@@ -97,26 +142,18 @@ void Interface::startGame(Board& B) {
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
         currentPlayerPtr = playerList[currentPlayerIndex];
 
-
-        //check scores
-       /* if (B.getWinner() != 0) {
-			cout << "Game Over" << endl;
-			cout << "Player " << B.getWinner() << " wins" << endl;
-            break;
-        }*/
-
-
-
         //calculate scores
         calculateScores(B);
 
 		// Print the board
         printScores();
 
+        B.setMoveCount(B.getMoveCount() + 1);
+
     }
 }
 
-void Interface::quitGame(Board& B) {
+void Interface::serializeGame(Board& B) {
 	// Save the game
 	Serialization s(B);
     s.setComputerCaptures(B.getComputerCaptures());
@@ -125,12 +162,25 @@ void Interface::quitGame(Board& B) {
     s.setHumanScore(getHumanScore());
 
 
+    
+    //find out which one is Human
+    //we have no idea which one is human,
+    
+    if (getHumanColor() == 'W') {
+
+		s.setHumanColor('W');
+        s.setComputerColor('B');
+    }
+        
+    else {
+        s.setHumanColor('B');
+        s.setComputerColor('W');
+
+    }
+
+
+
 	s.writeIntoFile(B);
-
-	// Print the scores
-	
-
-	// Announce the winner
 }
 
 void Interface :: calculateScores(Board& B) {

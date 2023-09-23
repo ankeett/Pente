@@ -185,6 +185,34 @@ pair<int, int> Strategy::evaluateAllCases(Board B, int playerSymbol) {
 
 }
 
+pair<int, int> Strategy::evaluateSecondMove(Board B, int playerSymbol) {
+
+	// Define the coordinates of the center of the board
+	int centerRow = 9;
+	int centerCol = 9;
+
+	// Search for an empty cell that is exactly 3 steps away from the center (J10)
+	for (int dr = -2; dr <= 2; dr++) {
+		for (int dc = -2; dc <= 2; dc++) {
+			int newRow = centerRow + dr;
+			int newCol = centerCol + dc;
+
+			// Check if the new position is within bounds, exactly 3 intersections away, and empty
+			if (newRow >= 0 && newRow < 19 && newCol >= 0 && newCol < 19 &&
+				(dr * dr + dc * dc == 4) && B.isEmptyCell(newRow, newCol)) {
+				cout << "3 intersections away but closer to the center of the board" << endl;
+				return make_pair(newRow, newCol);
+			}
+		}
+	}
+
+	// If no suitable position is found, return {-1, -1} to indicate no move is available
+	cout << "random move" << endl;
+	return randomMove(B, playerSymbol);
+}
+
+
+
 
 pair<int, int> Strategy::randomMove(Board B, int playerSymbol) {
 	int row = rand() % 19+1;

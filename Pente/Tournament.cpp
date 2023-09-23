@@ -80,6 +80,9 @@ void Tournament::continueGame() {
 
 		games.push_back(game);
 
+		if (game.quitTournament()) {
+			break;
+		}
 		//ask if they want to continue
 		cout << "Do you want to continue? (y/n)" << endl;
 		char choice;
@@ -140,7 +143,17 @@ void Tournament::continueGame() {
 
 		while (true) {
 			Interface game(playerList);
+
+			//human is always player 1
+			game.setHumanColor(getLastWinner() == 1 ? 'W' : 'B');
 			game.startMenu();
+
+			//set the human color to the color of the player who won the toss
+			//if the human won the toss, then the human will play white
+			//if the computer won the toss, then the human will play black
+
+
+
 
 			//add the scores
 			setHumanScores(getHumanScores() + game.getHumanScore());
@@ -148,6 +161,9 @@ void Tournament::continueGame() {
 
 			games.push_back(game);
 
+			if (game.quitTournament()) {
+				break;
+			}
 			//ask if they want to continue
 			cout << "Do you want to continue? (y/n)" << endl;
 			char choice;
@@ -161,8 +177,6 @@ void Tournament::continueGame() {
 
 			//swap the players if the computer won the game and the player wants to continue
 			//the winner of the game will play first in the next game
-			cout<<"getLastWinner() " << getLastWinner() << endl;
-			cout<<"game.getWinner() " << game.getWinner() << endl;
 			if (getLastWinner() != game.getWinner()) {
 				Player* temp = playerList[0];
 				playerList[0] = playerList[1];

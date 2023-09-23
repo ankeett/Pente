@@ -44,7 +44,32 @@ public:
 		return winner;
 	}
 
-	void quitGame(Board& B);
+	void serializeGame(Board& B);
+
+	//quit the tournament or not
+	bool quitTournament() const {
+		return quit;
+	}
+
+	void setQuit(bool quit) {
+		this->quit = quit;
+	}
+
+	void setHumanColor(char color) {
+			humanColor = color;
+		}
+
+	char getHumanColor() const {
+		return humanColor;
+	}
+
+	void setCurrentPlayerIndex(int index) {
+			currentPlayerIndex = index;
+		}
+
+	int getCurrentPlayerIndex() const {
+		return currentPlayerIndex;
+	}
 
 private:
 	Board B;
@@ -55,5 +80,12 @@ private:
 	int computerScore = 0;	
 	
 	int winner = 0;
+
+	char humanColor = ' ';
+
+	//quit the tournament or not
+	bool quit = false;
+
+	int currentPlayerIndex = 0;
 
 };

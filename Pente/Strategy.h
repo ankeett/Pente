@@ -11,6 +11,7 @@ public:
 
 	//evaluate all the possible cases and give best result
 	pair<int, int> evaluateAllCases(Board B, int playerSymbol);
+	pair<int,int> evaluateSecondMove(Board B, int playerSymbol);
 
 
 private:
