@@ -48,6 +48,9 @@ void Interface::continueGame(Board& B) {
     //if the human player is white, then the human player is playerList[0]
     //if the human player is black, then the human player is playerList[1]
 
+    //set the human color
+    setHumanColor(s.getHumanColor());
+
     if (s.getHumanColor() == 'W') {
         //player 1 is human
         //if next player is human, then set index
@@ -99,6 +102,9 @@ void Interface::continueGame(Board& B) {
 }
 
 void Interface::startGame(Board& B) {
+
+    //set the human color
+
 
     //check if the board is empty
     //send the move information in the board to the player
@@ -170,7 +176,8 @@ void Interface::startGame(Board& B) {
         }
 
         //no need to ask if the current player is human
-
+        cout << getHumanColor() << endl;
+        cout<< currentPlayerPtr->getSymbol() << endl;
         if (currentPlayerPtr->getSymbol() != getHumanColor()) {
             cout<<"Do you want to quit?(y/n)" << endl;
             string response;

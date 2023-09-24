@@ -46,6 +46,9 @@ public:
 
 	void serializeGame(Interface& game);
 
+
+	void readGame(Interface& game);
+
 private:
 	vector<Interface> games;
 

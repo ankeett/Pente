@@ -84,7 +84,6 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
         }
         if (moveCount == 3) {
 			//the stone should be at least 3 intersections away from the center of the board ie J10
-            cout << "Here I am" << endl;
             if (!isThreePointsAway("J10", move)) {
 				cout << "Invalid move. Please enter a valid position." << endl;
                 cout<<"Hint: The stone should be at least 3 intersections away from the center of the board i.e. J10"<<endl;
@@ -110,7 +109,7 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
                 return;
             }
 
-            if (B.checkCapture(row, col, 1)) {
+            while (B.checkCapture(row, col, 1)) {
                 B.printBoard(HumanPlayer::getSymbol());
 				cout<<"You captured a stone!"<<endl;
 			}

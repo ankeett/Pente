@@ -75,6 +75,12 @@ std::pair<int, int> Strategy::defendWinningMove(Board B, int playerSymbol) {
 pair<int, int> Strategy::captureOpponent(Board B, int playerSymbol) {
     	int opponentSymbol = (playerSymbol == 1) ? 2 : 1;
 
+		//keep track of the number of opponent stones that can be captured from a position
+		//return the position that can capture the most number of opponent stones
+		//keep rhe pair and the number of opponent stones that can be captured in a map
+
+		map<pair<int, int>, int> captureMap;
+
 	// Iterate through the entire game board
         for (int row = 1; row <= 19; row++) {
             for (int col = 0; col < 19; col++) {
@@ -84,10 +90,23 @@ pair<int, int> Strategy::captureOpponent(Board B, int playerSymbol) {
 				B.setBoard(row, col, playerSymbol);
 
 				// Check for five-in-a-row with the simulated stone
-                if (B.checkCapture(row, col, playerSymbol)) {
+                while (B.checkCapture(row, col, playerSymbol)) {
 					// If winning move is found, return the position
 					B.setBoard(row, col, 0); // Undo the simulation
-					return std::make_pair(row, col);
+
+					//increment the number of opponent stones that can be captured from this position
+					auto it = captureMap.find(make_pair(row, col));
+					if (it != captureMap.end()) {
+						// Key exists in the map, increment the value
+						it->second++;
+					}
+					else {
+						// Key doesn't exist, so create it with a value of 1
+						captureMap[make_pair(row, col)] = 1;
+					}
+
+
+					//return std::make_pair(row, col);
 				}
 
 				// Undo the simulation by resetting the cell to empty
@@ -99,8 +118,17 @@ pair<int, int> Strategy::captureOpponent(Board B, int playerSymbol) {
 		}
 	}
 
-	// No immediate winning move found
-	return std::make_pair(-1, -1); // Return a default value    
+		//return the key with the highest value
+		int max = -1;
+		pair<int, int> bestPosition = make_pair(-1, -1);
+		for (auto it = captureMap.begin(); it != captureMap.end(); it++) {
+			if (it->second > max) {
+				max = it->second;
+				bestPosition = it->first;
+			}
+		}
+
+	return bestPosition;
 
 }
 
@@ -138,11 +166,7 @@ pair<int, int> Strategy::defendCapture(Board B, int playerSymbol) {
 pair<int, int> Strategy::evaluateAllCases(Board B, int playerSymbol) {
 
 	//priority will be winning move, then defending win, then capturing opponent, then defending capture, then random
-	pair<int, int> winningMove = findWinningMove(B, playerSymbol);
-	if (winningMove.first != -1) {
-		cout<<"Reason: Winning move"<<endl;
-		return winningMove;
-	}
+	
 
 	pair<int, int> defendingWin = defendWinningMove(B, playerSymbol);
 	if (defendingWin.first != -1) {
@@ -166,6 +190,12 @@ pair<int, int> Strategy::evaluateAllCases(Board B, int playerSymbol) {
 	if (defendingCapture.first != -1) {
 		cout<<"Reason: Defending capture"<<endl;
 		return defendingCapture;
+	}
+
+	pair<int, int> winningMove = findWinningMove(B, playerSymbol);
+	if (winningMove.first != -1) {
+		cout << "Reason: Winning move" << endl;
+		return winningMove;
 	}
 
 	pair<int,int> maxConsecutivePos = maxConsecutive(B, playerSymbol);

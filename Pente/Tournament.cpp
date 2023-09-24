@@ -59,29 +59,58 @@ void Tournament::run() {
 
 }
 
+void Tournament::readGame(Interface& game) {
+
+}
+
+
 void Tournament::continueGame() {
 	//first we continue the game 
 	// if user chooses to play more, we start the game
 	bool isFirstGame = true;
+
 
 	while (true) {	
 		Interface game(playerList);
 		if (isFirstGame) {
 			game.continueMenu();
 			isFirstGame = false;
+			cout<<"Last game's Human Color: " << game.getHumanColor() << endl;
+			game.getHumanColor() == 'W' ? setLastWinner(1) : setLastWinner(2);
 		}
 		else {
+			game.setHumanColor(getLastWinner() == 1 ? 'W' : 'B');
 			game.startMenu();
 		}
+
+		if (game.quitTournament()) {
+			cout << "Do you want to serialize the game? (y/n)" << endl;
+			char answer;
+			cin >> answer;
+
+			answer = tolower(answer);
+
+			if (answer == 'y') {
+
+				//quit the game and let the tournament class serialize the game
+				serializeGame(game);
+			}
+
+			break;
+		}
+
 		//add the scores
 		setHumanScores(getHumanScores() + game.getHumanScore());
 		setComputerScores(getComputerScores() + game.getComputerScore());
 
 		games.push_back(game);
 
-		if (game.quitTournament()) {
-			break;
-		}
+		// show scores of the tournament
+		cout << "----Tournament Scores----" << endl;
+
+		cout << "Your score: " << getHumanScores() << endl;
+		cout << "Computer score: " << getComputerScores() << endl;
+
 		//ask if they want to continue
 		cout << "Do you want to continue? (y/n)" << endl;
 		char choice;
@@ -93,16 +122,18 @@ void Tournament::continueGame() {
 			break;
 		}
 
-		//swap the players if the computer won the game and the player wants to continue
-		//the winner of the game will play first in the next game
-		if (getLastWinner() != game.getWinner()) {
-			Player* temp = playerList[0];
-			playerList[0] = playerList[1];
-			playerList[1] = temp;
-		}
-		// Set the symbols for the next game
-		playerList[0]->setSymbol('W');
-		playerList[1]->setSymbol('B');
+		//if human is White, then human is getLastWinner() == 1
+
+		////swap the players if the computer won the game and the player wants to continue
+		////the winner of the game will play first in the next game
+		//if (getLastWinner() != game.getWinner()) {
+		//	Player* temp = playerList[0];
+		//	playerList[0] = playerList[1];
+		//	playerList[1] = temp;
+		//}
+		//// Set the symbols for the next game
+		//playerList[0]->setSymbol('W');
+		//playerList[1]->setSymbol('B');
 
 		//set the last winner
 		//setLastWinner(game.getWinner());
@@ -125,6 +156,17 @@ void Tournament::continueGame() {
 				setLastWinner(2);
 			}
 		}
+
+		//swap the players if the computer won the game and the player wants to continue
+		//the winner of the game will play first in the next game
+		if (getLastWinner() != game.getWinner()) {
+			Player* temp = playerList[0];
+			playerList[0] = playerList[1];
+			playerList[1] = temp;
+		}
+		// Set the symbols for the next game
+		playerList[0]->setSymbol('W');
+		playerList[1]->setSymbol('B');
 	}
 
 

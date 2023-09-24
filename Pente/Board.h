@@ -72,7 +72,6 @@ public:
 		for (int i = 1; i <= 19; i++) {
 			for (int j = 0; j < 19; j++) {
 				if (board[i-1][j] != 0) {
-					cout << board[i - 1][j] << endl;
 					count++;
 				}
 			}

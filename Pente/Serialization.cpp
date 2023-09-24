@@ -40,11 +40,8 @@ void Serialization::readBoard(Board& B) {
 		playerPair = findColor(line);
 	}
 
-	cout<<playerPair.first<<endl;
-	cout<<playerPair.second<<endl;
 	//find human and computer stone
 	setNextPlayer(playerPair.first);
-	cout<<getNextPlayer()<<endl;
 	if (playerPair.first == "Human") {
 		if (playerPair.second == "White") {
 
@@ -76,19 +73,18 @@ void Serialization::readBoard(Board& B) {
 	file.seekg(0); // Seek to the beginning of the file	bool isBoardSection = false;
 	ifstream file1(fileName);
 
-	cout<<getHumanColor()<<endl;
 	int row = 1;
-	bool isBoardSection = false;
+	bool isBoard = false;
 	//write from the file into the board
 	while (getline(file1, line)) {
 		// Check if we have entered the board section
 		if (line.find("Board:") != std::string::npos) {
-			isBoardSection = true;
+			isBoard = true;
 			continue; // Skip the "Board:" line
 		}
 
 		// Check if we are still in the board section
-		if (isBoardSection) {
+		if (isBoard) {
 			// Process the board state line
 			for (int col = 0; col <19; col++) {
 				char symbol = line[col];

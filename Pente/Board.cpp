@@ -340,9 +340,12 @@ int Board::countFour(int symbol) {
                 }
             }
         }
+
     }
 
     return count;
 }
+
+
 
 
