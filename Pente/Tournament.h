@@ -44,6 +44,8 @@ public:
 		lastWinner = winner;
 	}
 
+	void serializeGame(Interface& game);
+
 private:
 	vector<Interface> games;
 
@@ -52,7 +54,7 @@ private:
 	int humanScores = 0;
 	int computerScores = 0;
 
-	int currentPlayerIndex;
+	//int currentPlayerIndex;
 
 	int lastWinner = 0;
 };

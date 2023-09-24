@@ -40,8 +40,6 @@ void Interface::continueGame(Board& B) {
     int moveCount = B.checkEmptyBoard();
     B.setMoveCount(moveCount+1);
 
-    cout<< "Move Count: " << B.getMoveCount() << endl;
-
     //set the players in the player list
     //the player with the white stone is the first player
     //the white stone is playerList[0]
@@ -126,100 +124,137 @@ void Interface::startGame(Board& B) {
         //check if the currentPlayer wants to quit
         if (currentPlayerPtr->getQuit() == true) {
             setQuit(true);
-            cout<<"Do you want to serialize the game? (y/n)" << endl;
-            char answer;
-            cin >> answer;
+   //         cout<<"Do you want to serialize the game? (y/n)" << endl;
+   //         char answer;
+   //         cin >> answer;
 
-            answer = tolower(answer);
+   //         answer = tolower(answer);
 
-            if (answer == 'y') {
-                serializeGame(B);
-			}
+   //         if (answer == 'y') {
+
+   //             //quit the game and let the tournament class serialize the game
+   //             
+
+   //             serializeGame(B);
+			//}
             B.setGameOver(true);
 			return;
 		}
         // Switch to the other player's turn
-        currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-        currentPlayerPtr = playerList[currentPlayerIndex];
+        //currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+        //currentPlayerPtr = playerList[currentPlayerIndex];
 
-        //calculate scores
-        calculateScores(B);
-
-		// Print the board
-        printScores();
+        setCurrentPlayerIndex((currentPlayerIndex +1) %2);
+        currentPlayerPtr = playerList[getCurrentPlayerIndex()];
 
         B.setMoveCount(B.getMoveCount() + 1);
-
-    }
-}
-
-void Interface::serializeGame(Board& B) {
-	// Save the game
-	Serialization s(B);
-    s.setComputerCaptures(B.getComputerCaptures());
-    s.setHumanCaptures(B.getHumanCaptures());   
-    s.setComputerScore(getComputerScore());
-    s.setHumanScore(getHumanScore());
-
-
-    
-    //find out which one is Human
-    //we have no idea which one is human,
-    
-    if (getHumanColor() == 'W') {
-
-		s.setHumanColor('W');
-        s.setComputerColor('B');
-    }
-        
-    else {
-        s.setHumanColor('B');
-        s.setComputerColor('W');
-
-    }
-
-
-
-	s.writeIntoFile(B);
-}
-
-void Interface :: calculateScores(Board& B) {
-     if(B.getHumanCaptures() == 5 || B.getComputerCaptures() == 5){
-			cout << "Game Over" << endl;
-			if(B.getHumanCaptures() == 5)
-				cout << "You win!" << endl;
-			else
-				cout << "Computer wins" << endl;
-			B.setGameOver(true);
-		}
-
 
         // Print the scores
         cout << "Human Captures: " << B.getHumanCaptures() << endl;
         cout << "Computer Captures: " << B.getComputerCaptures() << endl;
 
-        setHumanScore(B.getHumanCaptures());
-        setComputerScore(B.getComputerCaptures());
 
-        if (B.getWinner() != 0) {
-            if (B.getWinner() == 1) {
+        //check captures 
+        if (B.getHumanCaptures() == 5 || B.getComputerCaptures() == 5) {
+            cout << "Game Over" << endl;
+            if (B.getHumanCaptures() == 5) {
                 setWinner(1);
-                setHumanScore(getHumanScore() + 5);
+                cout << "You win!" << endl;
             }
-			else {
+            else {
                 setWinner(2);
-				setComputerScore(getComputerScore() + 5);
+                cout << "Computer wins" << endl;
+
             }
-         }
+            B.setGameOver(true);
+        }
+
+        //no need to ask if the current player is human
+
+        if (currentPlayerPtr->getSymbol() != getHumanColor()) {
+            cout<<"Do you want to quit?(y/n)" << endl;
+            string response;
+            cin >> response;
+            for (char& r : response) r = toupper(r);
+
+            if (response == "Y") {
+			    cout << "Quitting the game" << endl;
+			    setQuit(true);
+                B.setGameOver(true);
+			    return;
+		    }
+        }
+
+    }
+
+
+    //calculate scores
+    calculateScores(B);
+
+    //print scores
+    printScores();
+
+}
+
+//void Interface::serializeGame(Board& B) {
+//	// Save the game
+//	Serialization s(B);
+//    s.setComputerCaptures(B.getComputerCaptures());
+//    s.setHumanCaptures(B.getHumanCaptures());   
+//    s.setComputerScore(getComputerScore());
+//    s.setHumanScore(getHumanScore());
+//
+//
+//    
+//    //find out which one is Human
+//    //we have no idea which one is human,
+//    
+//    if (getHumanColor() == 'W') {
+//		s.setHumanColor('W');
+//        s.setComputerColor('B');
+//    }
+//        
+//    else {
+//        s.setHumanColor('B');
+//        s.setComputerColor('W');
+//    }
+//
+//	s.writeIntoFile(B);
+//}
+
+void Interface::calculateScores(Board& B) {
+
+    //find total number of 4 in a row except for 5 in a row 
+    //search every row and col values
+    //if there is 4 in a row, then add 1 to the score
+    cout<<"Human 4 in a row:" << B.countFour(1) << endl;
+    cout<<"Computer 4 in a row:" << B.countFour(2) << endl;
+
+    setHumanScore(B.getHumanCaptures() + B.countFour(1));
+    setComputerScore(B.getComputerCaptures() + B.countFour(2));
+
+    //the getWinner gives the 5 in a row player
+    if (B.getWinner() != 0) {
+        if (B.getWinner() == 1) {
+            setWinner(1);
+            setHumanScore(getHumanScore() + 5);
+        }
+		else {
+            setWinner(2);
+			setComputerScore(getComputerScore() + 5);
+        }
+    }
 
 }
 
 void Interface::printScores() const{
+
+    cout << "----Round Scores----" << endl;
     cout << "Human Score: " << getHumanScore() << endl;
     cout << "Computer Score: " << getComputerScore() << endl;
 }
 
-int Interface::sendWinner(Board& B) {
-    //1 is human, 2 is computer
-    return B.getWinner();
-}
+//int Interface::sendWinner(Board& B) {
+//    //1 is human, 2 is computer
+//    return B.getWinner();
+//}

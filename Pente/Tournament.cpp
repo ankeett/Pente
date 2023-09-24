@@ -5,7 +5,7 @@ Tournament::Tournament()
 {
 	playerList[0] = new HumanPlayer('W');
 	playerList[1] = new ComputerPlayer('B');
-	currentPlayerIndex = 0; //Start the game with human
+	//currentPlayerIndex = 0; //Start the game with human
 }
 
 Tournament::~Tournament()
@@ -17,7 +17,6 @@ Tournament::~Tournament()
 
 	cout << "Game Over" << endl;
 }
-
 
 
 void Tournament::run() {
@@ -96,8 +95,6 @@ void Tournament::continueGame() {
 
 		//swap the players if the computer won the game and the player wants to continue
 		//the winner of the game will play first in the next game
-		cout << "getLastWinner() " << getLastWinner() << endl;
-		cout << "game.getWinner() " << game.getWinner() << endl;
 		if (getLastWinner() != game.getWinner()) {
 			Player* temp = playerList[0];
 			playerList[0] = playerList[1];
@@ -108,7 +105,26 @@ void Tournament::continueGame() {
 		playerList[1]->setSymbol('B');
 
 		//set the last winner
-		setLastWinner(game.getWinner());
+		//setLastWinner(game.getWinner());
+		if (getHumanScores() > getComputerScores()) {
+			setLastWinner(1);
+		}
+		else if (getHumanScores() < getComputerScores()) {
+			setLastWinner(2);
+		}
+		else {
+			//toss the coin
+			cout << "Toss. Choose 0 for Head and 1 for Tails" << endl;
+			int toss;
+			cin >> toss;
+
+			if (toss == tossCoin()) {
+				setLastWinner(1);
+			}
+			else {
+				setLastWinner(2);
+			}
+		}
 	}
 
 
@@ -117,8 +133,6 @@ void Tournament::continueGame() {
 
 }
 	void Tournament::startGame() {
-
-	
 		int toss;
 		cout<<"Toss. Choose 0 for Head and 1 for Tails" << endl;
 		cin >>toss;
@@ -153,17 +167,33 @@ void Tournament::continueGame() {
 			//if the computer won the toss, then the human will play black
 
 
+			if (game.quitTournament()) {
+				cout << "Do you want to serialize the game? (y/n)" << endl;
+				char answer;
+				cin >> answer;
 
+				answer = tolower(answer);
 
+				if (answer == 'y') {
+
+					//quit the game and let the tournament class serialize the game
+					serializeGame(game);
+				}
+
+				break;
+			}
 			//add the scores
 			setHumanScores(getHumanScores() + game.getHumanScore());
 			setComputerScores(getComputerScores() + game.getComputerScore());
 
 			games.push_back(game);
 
-			if (game.quitTournament()) {
-				break;
-			}
+			// show scores of the tournament
+			cout << "----Tournament Scores----" << endl;
+
+			cout << "Your score: " << getHumanScores() << endl;
+			cout << "Computer score: " << getComputerScores() << endl;
+
 			//ask if they want to continue
 			cout << "Do you want to continue? (y/n)" << endl;
 			char choice;
@@ -187,7 +217,28 @@ void Tournament::continueGame() {
 			playerList[1]->setSymbol('B');
 
 			//set the last winner
-			setLastWinner(game.getWinner());
+			//winner is based on the Round score
+			//setLastWinner(game.getWinner());
+
+			if (getHumanScores() > getComputerScores()) {
+				setLastWinner(1);
+			}
+			else if (getHumanScores() < getComputerScores()) {
+				setLastWinner(2);
+			}
+			else {
+				//toss the coin
+				cout<<"Toss. Choose 0 for Head and 1 for Tails" << endl;
+				cin >>toss;
+
+				if(toss == tossCoin()) {
+					setLastWinner(1);
+				} else {
+					setLastWinner(2);
+				}
+			}
+			
+
 		}
 		
 
@@ -196,11 +247,7 @@ void Tournament::continueGame() {
 	}
 
 void Tournament::announceWinner() const {
-	// show scores
-	cout<<"Final Scores:" << endl;
-
-	cout<<"Your score: " << getHumanScores() << endl;	
-	cout<<"Computer score: " << getComputerScores() << endl;
+	
 
 	if(getHumanScores() > getComputerScores()) {
 		cout << "Congratulations! You won the tournament!" << endl;
@@ -209,4 +256,37 @@ void Tournament::announceWinner() const {
 	} else {
 		cout << "It's a tie!" << endl;
 	}
+}
+
+void Tournament::serializeGame(Interface& game) {
+	Board B = game.getBoard();
+	// Save the game
+	Serialization s(B);
+	s.setComputerCaptures(B.getComputerCaptures());
+	s.setHumanCaptures(B.getHumanCaptures());
+	s.setComputerScore(getComputerScores());
+	s.setHumanScore(getHumanScores());
+
+	//game.getCurrentPlayerIndex() == 0 ? s.setNextPlayer("Human") : s.setNextPlayer("Computer");
+
+	if (playerList[game.getCurrentPlayerIndex()]->getSymbol() == game.getHumanColor()) {
+		s.setNextPlayer("Human");
+	} else {
+		s.setNextPlayer("Computer");
+	}
+
+
+	//find out which one is Human
+	//we have no idea which one is human,
+	if (game.getHumanColor() == 'W') {
+		s.setHumanColor('W');
+		s.setComputerColor('B');
+	}
+
+	else {
+		s.setHumanColor('B');
+		s.setComputerColor('W');
+	}
+
+	s.writeIntoFile(B);
 }

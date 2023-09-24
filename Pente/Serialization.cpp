@@ -10,20 +10,27 @@ Serialization::~Serialization()
 
 void Serialization::readBoard(Board& B) {
 
-	cout<<"Enter the name of the file you want to read from: ";
 	string fileName;
+	ifstream file; 
 
-	cin >> fileName;
+	while (true) {
+		cout << "Enter the name of the file you want to read from: ";
+		cin >> fileName;
 
-	ifstream file(fileName);
+		// Attempt to open the file
+		file.open(fileName); 
 
-	if (file.is_open()) {
-		cout << "File opened successfully" << endl;
+		if (file.is_open()) {
+			cout << "File opened successfully" << endl;
+			// Exit the loop if the file is successfully opened
+			break; 
+		}
+		else {
+			cout << "File could not be opened" << endl;
+			file.clear();
+		}
 	}
-	else {
-		cout << "File could not be opened" << endl;
-		return;
-	}
+
 
 	string line;
 	std::pair<std::string, std::string> playerPair;
@@ -220,20 +227,25 @@ string Serialization::trim(const string& str) {
 
 void Serialization::writeIntoFile(Board& B) {
 
-	//get the name of the file
-	cout<<"Enter the name of the file you want to write to: ";
 	string fileName;
+	ofstream file;
 
-	cin >> fileName;
+	while (true) {
+		cout << "Enter the name of the file you want to write to: ";
+		cin >> fileName;
 
-	ofstream file(fileName);
+		// Attempt to open the file
+		file.open(fileName);
 
-	if (file.is_open()) {
-		cout << "File opened successfully" << endl;
-	}
-	else {
-		cout << "File could not be opened" << endl;
-		return;
+		if (file.is_open()) {
+			cout << "File opened successfully" << endl;
+			// Exit the loop if the file is successfully opened
+			break;
+		}
+		else {
+			cout << "File could not be opened" << endl;
+			file.clear();
+		}
 	}
 
 	//write the board into the file
@@ -279,8 +291,14 @@ void Serialization::writeIntoFile(Board& B) {
 	file <<"Score: "<<getComputerScore()<<endl;
 
 	file << endl;
-	string color = (getHumanColor() == 'W') ? "White" : "Black";
+	string color;
+
+	if (getNextPlayer() == "Human") {
+		color = (getHumanColor() == 'W') ? "White" : "Black";
+	}
+	else {
+		color = (getHumanColor() == 'W') ? "Black" : "White";
+	}
+
 	file <<"Next Player: "<<getNextPlayer()<<" - "<< color <<endl;
-
-
 }

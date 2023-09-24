@@ -34,7 +34,7 @@ public:
 	void calculateScores(Board& B);
 	void printScores() const;
 
-	int sendWinner(Board& B);
+	//int sendWinner(Board& B);
 
 	void setWinner(int winner) {
 		this->winner = winner;
@@ -44,7 +44,7 @@ public:
 		return winner;
 	}
 
-	void serializeGame(Board& B);
+	//void serializeGame(Board& B);
 
 	//quit the tournament or not
 	bool quitTournament() const {
@@ -57,7 +57,7 @@ public:
 
 	void setHumanColor(char color) {
 			humanColor = color;
-		}
+	}
 
 	char getHumanColor() const {
 		return humanColor;
@@ -65,10 +65,22 @@ public:
 
 	void setCurrentPlayerIndex(int index) {
 			currentPlayerIndex = index;
-		}
+	}
 
 	int getCurrentPlayerIndex() const {
 		return currentPlayerIndex;
+	}
+
+	Board getBoard() const {
+		return B;
+	}
+
+	int getHumanCapture() const {
+		return B.getHumanCaptures();
+	}
+
+	int getComputerCapture() const {
+		return B.getComputerCaptures();
 	}
 
 private:
@@ -86,6 +98,7 @@ private:
 	//quit the tournament or not
 	bool quit = false;
 
-	int currentPlayerIndex = 0;
 
+	//white player is always at index 0
+	int currentPlayerIndex = 0;
 };

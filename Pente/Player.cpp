@@ -34,9 +34,6 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
     // Implement code to get input from the human player and make a move on the Pente board
     // You can prompt the player for input and handle their move here
     do {
-
-        
-
         string move;
         if (moveCount == 1) {
             cout << "The first move is always in the center of the board." << endl;
@@ -123,6 +120,9 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
             cout << "Invalid move. Please enter a valid position." << endl;
         }
     } while (true);
+
+    
+    
 }
 
 bool Player::isThreePointsAway(string initialPos, string nextPos){
@@ -161,6 +161,8 @@ void ComputerPlayer::makeMove(Board& B, int moveCount) {
     // This function should generate a valid move for the computer
     // Implement the AI move logic
 
+    
+
     do {
         string move;
         int row, col;
@@ -195,9 +197,6 @@ void ComputerPlayer::makeMove(Board& B, int moveCount) {
                     continue;
                 }
             }
-
-            cout << "Computer's move: " << bestMove.first << "," << bestMove.second << endl;
-
 
         }
 

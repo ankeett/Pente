@@ -140,47 +140,47 @@ pair<int, int> Strategy::evaluateAllCases(Board B, int playerSymbol) {
 	//priority will be winning move, then defending win, then capturing opponent, then defending capture, then random
 	pair<int, int> winningMove = findWinningMove(B, playerSymbol);
 	if (winningMove.first != -1) {
-		cout<<"winning move"<<endl;
+		cout<<"Reason: Winning move"<<endl;
 		return winningMove;
 	}
 
 	pair<int, int> defendingWin = defendWinningMove(B, playerSymbol);
 	if (defendingWin.first != -1) {
-		cout<<"defending win"<<endl;
+		cout<<"Reason: Defending win"<<endl;
 		return defendingWin;
 	}
 
 	pair<int,int> defendingFour = defendFour(B, playerSymbol);
 	if (defendingFour.first != -1) {
-		cout<<"defending four"<<endl;
+		cout<<"Reason: Defending four"<<endl;
 		return defendingFour;
 	}
 
 	pair<int, int> capturingOpponent = captureOpponent(B, playerSymbol);
 	if (capturingOpponent.first != -1) {
-		cout<<"capturing opponent"<<endl;
+		cout<<"Reason: Capturing opponent"<<endl;
 		return capturingOpponent;
 	}
 
 	pair<int, int> defendingCapture = defendCapture(B, playerSymbol);
 	if (defendingCapture.first != -1) {
-		cout<<"defending capture"<<endl;
+		cout<<"Reason: Defending capture"<<endl;
 		return defendingCapture;
 	}
 
 	pair<int,int> maxConsecutivePos = maxConsecutive(B, playerSymbol);
 	if (maxConsecutivePos.first != -1) {
-		cout<<"max consecutive"<<endl;
+		cout<<"Reason: Trying to make Max consecutive"<<endl;
 		return maxConsecutivePos;
 	}
 
 	pair<int, int> centerPos = controlCenter(B, playerSymbol);
 	if (centerPos.first != -1) {
-		cout<<"center"<<endl;
+		cout<<"Reason: Trying to control the center."<<endl;
 		return centerPos;
 	}
 
-	cout<<"random move"<<endl;
+	cout<<"Reason: No good position available. Randomizing the move."<<endl;
 	return randomMove(B, playerSymbol);
 
 }
@@ -200,14 +200,14 @@ pair<int, int> Strategy::evaluateSecondMove(Board B, int playerSymbol) {
 			// Check if the new position is within bounds, exactly 3 intersections away, and empty
 			if (newRow >= 0 && newRow < 19 && newCol >= 0 && newCol < 19 &&
 				(dr * dr + dc * dc == 4) && B.isEmptyCell(newRow, newCol)) {
-				cout << "3 intersections away but closer to the center of the board" << endl;
+				cout << "Reason: 3 intersections away but closer to the center of the board" << endl;
 				return make_pair(newRow, newCol);
 			}
 		}
 	}
 
 	// If no suitable position is found, return {-1, -1} to indicate no move is available
-	cout << "random move" << endl;
+	cout << "Reason: No good position available. Randomizing the move." << endl;
 	return randomMove(B, playerSymbol);
 }
 
@@ -227,7 +227,6 @@ pair<int, int> Strategy::randomMove(Board B, int playerSymbol) {
 
 pair<int, int> Strategy::defendFour(Board B, int playerSymbol) {
 	int opponentSymbol = (playerSymbol == 1) ? 2 : 1;
-
 
 	// Iterate through the entire game board
 	for (int row = 1; row <= 19; row++) {
@@ -316,6 +315,3 @@ pair<int, int> Strategy::controlCenter(Board B, int playerSymbol) {
 	// If no suitable position is found, return {-1, -1} to indicate no move is available
 	return make_pair(-1, -1);
 }
-
-
-
