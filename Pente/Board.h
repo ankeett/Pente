@@ -7,7 +7,9 @@ public:
 
 	void placeStone(string move,char symbol);
 
-	bool isEmptyCell(int row, int col) const;
+	bool isEmptyCell(int row, int col) const {
+		return board[row - 1][col] == 0;
+	}
 
 	bool checkFive(int row,int col, int symbol);
 	bool checkFour(int row, int col, int symbol);

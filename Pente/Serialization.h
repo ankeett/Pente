@@ -11,7 +11,7 @@ public:
 
 	void readBoard(Board& B);
 
-	pair<string, string> findColor(const string line);
+	void findColor(const string line);
 
 	void setHumanColor(char stone) {
 		humanColor = stone;

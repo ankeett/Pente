@@ -1,5 +1,5 @@
 #pragma once
-#include "Interface.h"
+#include "Round.h"
 #include "stdafx.h"
 #include "Serialization.h"
 
@@ -8,7 +8,19 @@ public:
 	Tournament();
 	~Tournament();	
 	void run();
+	void serializeGame(Round& game);
 
+	int tossCoin()const {
+		srand(time(NULL));
+		int toss = rand() % 2 + 1;
+		return toss;
+	}
+
+	void startGame();
+	void continueGame();
+	void announceWinner() const;
+
+	//getters and setters
 	int getHumanScores() const {
 		return humanScores;
 	}
@@ -25,17 +37,6 @@ public:
 		computerScores = score;
 	}
 
-	void announceWinner() const;
-
-	int tossCoin()const {
-		srand(time(NULL));
-		int toss = rand() % 2;
-		return toss;
-	}
-
-	void startGame();
-	void continueGame();
-
 	int getLastWinner() const {
 		return lastWinner;
 	}
@@ -44,20 +45,13 @@ public:
 		lastWinner = winner;
 	}
 
-	void serializeGame(Interface& game);
-
-
-	void readGame(Interface& game);
-
 private:
-	vector<Interface> games;
+	vector<Round> games;
 
 	Player* playerList[2];
 
 	int humanScores = 0;
 	int computerScores = 0;
-
-	//int currentPlayerIndex;
 
 	int lastWinner = 0;
 };

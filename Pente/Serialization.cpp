@@ -8,6 +8,39 @@ Serialization::~Serialization()
 	
 }
 
+
+/* *********************************************************************
+Function Name: Serialization::readBoard
+Purpose: Read and deserialize game board and player information from a file.
+Parameters:
+   - 'Board B': A reference to the Board object where the board state will be stored.
+Return Value: None
+Algorithm:
+1. Prompt the user to enter the name of the file to read from.
+2. Attempt to open the specified file.
+3. If the file is successfully opened, proceed with reading its contents; otherwise, print an error message.
+4. Create a pair of strings called 'playerPair' to store player color information.
+5. Read each line from the file:
+   a. Output the line to the console (for debugging).
+   b. Call 'findColor' function to extract and split player color information.
+6. Close the file after reading player color information.
+7. Reopen the same file for reading board data.
+8. Initialize 'row' and 'isBoard' for tracking board state.
+9. Iterate through each line in the file:
+   a. Check if the line contains "Board:". If it does, set 'isBoard' to 'true'.
+   b. If 'isBoard' is 'true', ensure the board row is valid.
+   c. Iterate through each character in the line to process the board state:
+	  i. Extract the character symbol.
+	  ii. Convert the character symbol to an integer based on player colors.
+	  iii. Update the board using 'B.setBoard' with the row, column, and integer value.
+	  iv. Increment the row counter.
+	  v. Break if 'row' exceeds 19.
+10. Read capturing and scoring information from the second part of the file.
+11. Parse and store human's and computer's captured pairs and scores.
+12. Print the board using 'B.printBoard' with the human's color.
+13. Close the file.
+Assistance Received: None
+********************************************************************* */
 void Serialization::readBoard(Board& B) {
 
 	string fileName;
@@ -37,40 +70,11 @@ void Serialization::readBoard(Board& B) {
 
 	while (getline(file, line)) {
 		cout << line << endl;
-		playerPair = findColor(line);
+		findColor(line);
 	}
 
-	//find human and computer stone
-	setNextPlayer(playerPair.first);
-	if (playerPair.first == "Human") {
-		if (playerPair.second == "White") {
-
-			//set the human stone to white
-			setHumanColor('W');
-			setComputerColor('B');
-
-		}
-		else {
-			//set the human stone to black
-			setHumanColor('B');
-			setComputerColor('W');
-		}
-	}
-	else {
-		if (playerPair.second == "White") {
-			//set the computer stone to white
-			setComputerColor('W');
-			setHumanColor('B');
-		}
-		else {
-			//set the computer stone to black
-			setComputerColor('B');
-			setHumanColor('W');
-		}
-	}
 	file.close();
-	file.clear(); // Reset the file stream's state
-	file.seekg(0); // Seek to the beginning of the file	bool isBoardSection = false;
+
 	ifstream file1(fileName);
 
 	int row = 1;
@@ -85,6 +89,15 @@ void Serialization::readBoard(Board& B) {
 
 		// Check if we are still in the board section
 		if (isBoard) {
+
+			//make sure the board is valid
+			if (row < 19) {
+				if (line.length() != 19) {
+					cout<<"Invalid board state"<<endl;
+					exit(1);
+				}
+			}
+
 			// Process the board state line
 			for (int col = 0; col <19; col++) {
 				char symbol = line[col];
@@ -122,9 +135,10 @@ void Serialization::readBoard(Board& B) {
 				// Update the board using your setBoard function
 				B.setBoard(row, col, intValue);
 			}
-			row++; // Increment the row counter
+			// Increment the row counter
+			row++; 
 			if (row >= 19) {
-				break; // Stop reading the file if we have reached the end of the board
+				break; 
 			}
 		}
 
@@ -132,44 +146,44 @@ void Serialization::readBoard(Board& B) {
 
 
 	// Read capturing and scoring information
-bool readingPlayerInfo = false;
-int humanCaptures = 0, humanScore = 0, computerCaptures = 0, computerScore = 0;
+	bool readingPlayerInfo = false;
+	int humanCaptures = 0, humanScore = 0, computerCaptures = 0, computerScore = 0;
 
-while (getline(file1, line)) {
-    if (line.find("Human:") != std::string::npos) {
-        // Start reading player information
+	while (getline(file1, line)) {
+		if (line.find("Human:") != std::string::npos) {
+			// Start reading player information
 
-        readingPlayerInfo = true;
-    } else if (line.find("Computer:") != std::string::npos) {
-        // Stop reading player information
-        readingPlayerInfo = false;
-    } else if (readingPlayerInfo) {
-        size_t posCaptures = line.find("Captured pairs:");
-        size_t posScore = line.find("Score:");
+			readingPlayerInfo = true;
+		} else if (line.find("Computer:") != std::string::npos) {
+			// Stop reading player information
+			readingPlayerInfo = false;
+		} else if (readingPlayerInfo) {
+			size_t posCaptures = line.find("Captured pairs:");
+			size_t posScore = line.find("Score:");
 
-        if (posCaptures != std::string::npos) {
-            // Read human's captured pairs
-            humanCaptures = std::stoi(line.substr(posCaptures + 15)); // 15 is the length of "Captured pairs:"
-        } else if (posScore != std::string::npos) {
-            // Read human's score
-            humanScore = std::stoi(line.substr(posScore + 6)); // 6 is the length of "Score:"
-        }
-    } else if (!readingPlayerInfo) {
-        size_t posCaptures = line.find("Captured pairs:");
-        size_t posScore = line.find("Score:");
+			if (posCaptures != std::string::npos) {
+				// Read human's captured pairs
+				humanCaptures = std::stoi(line.substr(posCaptures + 15)); // 15 is the length of "Captured pairs:"
+			} else if (posScore != std::string::npos) {
+				// Read human's score
+				humanScore = std::stoi(line.substr(posScore + 6)); // 6 is the length of "Score:"
+			}
+		} else if (!readingPlayerInfo) {
+			size_t posCaptures = line.find("Captured pairs:");
+			size_t posScore = line.find("Score:");
 
-        if (posCaptures != std::string::npos) {
-            // Read computer's captured pairs
-            computerCaptures = std::stoi(line.substr(posCaptures + 15)); // 15 is the length of "Captured pairs:"
-        } else if (posScore != std::string::npos) {
-            // Read computer's score
-            computerScore = std::stoi(line.substr(posScore + 6)); // 6 is the length of "Score:"
-        }
-    }
-	else {
-			cout<<"I'm here"<<endl;
+			if (posCaptures != std::string::npos) {
+				// Read computer's captured pairs
+				computerCaptures = std::stoi(line.substr(posCaptures + 15)); // 15 is the length of "Captured pairs:"
+			} else if (posScore != std::string::npos) {
+				// Read computer's score
+				computerScore = std::stoi(line.substr(posScore + 6)); // 6 is the length of "Score:"
+			}
+		}
+		else {
+				cout<<"I'm here"<<endl;
+		}
 	}
-}
 
 
 	// Set captured pairs and scores in the Serialization object
@@ -185,11 +199,25 @@ while (getline(file1, line)) {
 }
 
 
-
-pair<string, string> Serialization::findColor(const string line) {
+/*********************************************************************
+Function Name: Serialization::findColor
+Purpose: Extract and parse player color information from a string.
+Parameters:
+   - 'line' (input string): A string containing player color information.
+Return Value: None (void).
+Algorithm:
+1. Search for the position of the substring "Next Player:" in the input 'line'.
+2. If found, extract and split the substring after "Next Player:" into two parts.
+3. If two valid player names are extracted, update the player colors in the serialization object:
+   a. Set the next player based on 'playerPair.first'.
+   b. Determine and set human and computer stone colors based on the extracted values.
+   c. Handle cases where 'playerPair.first' and 'playerPair.second' are valid.
+Assistance Received: None
+*********************************************************************/
+void Serialization::findColor(const string line) {
 	size_t pos = line.find("Next Player:");
 
-	pair<string, string> playerPair;
+	pair<string, string> playerPair = {"1","1"};
 
 	if (pos != std::string::npos) {
 		// Find the substring after "Next Player:" and split it into two parts
@@ -209,9 +237,53 @@ pair<string, string> Serialization::findColor(const string line) {
 			playerPair.second = player2;
 		}
 	}
-	return playerPair;
+	
+	// Set the next player and player colors
+	if (playerPair.first != "1" && playerPair.second != "1") {
+
+		setNextPlayer(playerPair.first);
+		if (playerPair.first == "Human") {
+			if (playerPair.second == "White") {
+
+				//set the human stone to white
+				setHumanColor('W');
+				setComputerColor('B');
+
+			}
+			else {
+				//set the human stone to black
+				setHumanColor('B');
+				setComputerColor('W');
+			}
+		}
+		else {
+			if (playerPair.second == "White") {
+				//set the computer stone to white
+				setComputerColor('W');
+				setHumanColor('B');
+			}
+			else {
+				//set the computer stone to black
+				setComputerColor('B');
+				setHumanColor('W');
+			}
+		}
+	}
 }
 
+/*********************************************************************
+Function Name: Serialization::trim
+Purpose: Remove leading and trailing whitespace from a string.
+Parameters:
+   - 'str' (string, passed by referenced): The string to be trimmed.
+Return Value: A new string with leading and trailing whitespace removed.
+Algorithm:
+1. Find the index of the first non-space character in the input 'str' and store it in 'first'.
+2. If no non-space characters are found, return the original 'str'.
+3. Find the index of the last non-space character in the input 'str' and store it in 'last'.
+4. Extract and return a substring from 'str' starting at 'first' and ending at 'last' (inclusive).
+Assistance Received: Internet
+*********************************************************************/
 string Serialization::trim(const string& str) {
 	size_t first = str.find_first_not_of(' ');
 	if (std::string::npos == first) {
@@ -221,6 +293,23 @@ string Serialization::trim(const string& str) {
 	return str.substr(first, (last - first + 1));
 }
 
+
+/*********************************************************************
+Function Name: Serialization::writeIntoFile
+Purpose: Write the current game state to a file, including the board state and player information.
+Parameters:
+   - 'B' (Board object by reference): The current game board state.
+Return Value: None.
+Algorithm:
+1. Prompt the user to enter the name of the file they want to write to.
+2. Attempt to open the file for writing.
+3. If the file is successfully opened, proceed; otherwise, display an error message and retry.
+4. Write the board state to the file, including stone positions and their corresponding players.
+5. Write human player information to the file, including the number of captured pairs and the score.
+6. Write computer player information to the file, including the number of captured pairs and the score.
+7. Write information about the next player to make a move.
+Assistance Received: None
+*********************************************************************/
 void Serialization::writeIntoFile(Board& B) {
 
 	string fileName;
@@ -245,7 +334,6 @@ void Serialization::writeIntoFile(Board& B) {
 	}
 
 	//write the board into the file
-
 	// Write the board state
 	file << "Board:" << endl;
 
@@ -254,6 +342,7 @@ void Serialization::writeIntoFile(Board& B) {
 			int value = B.getBoard(row, col);
 
 			if (value == 1) {
+
 				if (getHumanColor() == 'W') {
 					file << 'W';
 				}

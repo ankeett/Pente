@@ -128,7 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
-    <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="Round.cpp" />
     <ClCompile Include="Pente.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Serialization.cpp" />
@@ -137,7 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
-    <ClInclude Include="Interface.h" />
+    <ClInclude Include="Round.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="stdafx.h" />
