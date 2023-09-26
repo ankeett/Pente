@@ -29,9 +29,10 @@ void Board::printBoard(char symbol) {
 
     // Print the board with row labels (1 - 19)
     // Rows go from 1 to 19, so we start from 18 down to 0
-    for (int row = 18; row >= 0; row--) {  
+    int row = 0;
+    for (int rowName = 18; rowName >= 0; rowName--) {  
         // Set the width to 2 for row labels
-        std::cout << setw(2) << row + 1 << ' '; 
+        std::cout << setw(2) << rowName + 1 << ' '; 
         for (int col = 0; col < 19; col++) {
             if (board[row][col] == 0) {
                 std::cout << ".  ";
@@ -47,8 +48,10 @@ void Board::printBoard(char symbol) {
                     std::cout << "W  "; 
             }
         }
+        row++;
         std::cout << "\n";
     }
+
 }
 
 
@@ -69,12 +72,16 @@ Algorithm:
 Assistance Received: None
 ********************************************************************* */
 void Board::placeStone(string move,char symbol) {
+    cout<<"move"<<move<<endl;
     // Convert first character to uppercase
     char colChar = toupper(move[0]);
     // Convert row number and adjust to 0-based
 	int row = std::stoi(move.substr(1));
     // Convert column character to index
 	int col = colChar - 'A'; 
+    row = 20- row;
+    cout <<"row"<< row << endl;
+    cout <<"col"<< col << endl;
 
     //place the stone on the board according to the human and computer player's move
     if (symbol == 'H') {
@@ -434,23 +441,23 @@ Assistance Received: None
 ********************************************************************* */
 int Board::calculateConsecutiveCount(int row, int col, int playerSymbol) {
     int consecutiveCount = 0;
-    
+
     // Define directions for checking consecutive stones (horizontal, vertical, diagonal)
     int directions[4][2] = { {1, 0}, {0, 1}, {1, 1}, {1, -1} };
-   
+
     // Iterate through the four directions
-    for (const auto& dir : directions) {
-        int dirRow = dir[0];
-        int dirCol = dir[1];
+    for (int i = 0; i < 4; i++) {
+        int dRow = directions[i][0];
+        int dCol = directions[i][1];
 
         // Check in both forward and backward directions
-        for (int dirSign = -1; dirSign <= 1; dirSign += 2) {
+        for (int sign = -1; sign <= 1; sign += 2) {
             int count = 0;
 
             // Iterate in the current direction
             for (int step = 1; step <= 4; step++) { // Check up to 4 stones in a row
-                int newRow = row + dirRow * dirSign * step;
-                int newCol = col + dirCol * dirSign * step;
+                int newRow = row + dRow * sign * step;
+                int newCol = col + dCol * sign * step;
 
                 // Check if the new position is within the board boundaries
                 if (newRow >= 0 && newRow < 19 && newCol >= 0 && newCol < 19) {
@@ -459,12 +466,12 @@ int Board::calculateConsecutiveCount(int row, int col, int playerSymbol) {
                     }
                     else {
                         // Stop checking in this direction
-                        break; 
+                        break;
                     }
                 }
                 else {
                     // Stop checking in this direction (out of bounds)
-                    break; 
+                    break;
                 }
             }
 
@@ -477,6 +484,7 @@ int Board::calculateConsecutiveCount(int row, int col, int playerSymbol) {
 
     return consecutiveCount;
 }
+
 
 
 /* *********************************************************************
@@ -500,63 +508,98 @@ Algorithm:
 8. Return the 'count' as the result, representing the count of occurrences of four consecutive stones.
 Assistance Received: None
 ********************************************************************* */
+//int Board::countFour(int symbol) {
+//    int count = 0;
+//
+//    // Define directions for all eight possible directions (up, down, left, right, and diagonals)
+//    int directions[][2] = {
+//        {0, -1},  // Up
+//        {0, 1},   // Down
+//        {-1, 0},  // Left
+//        {1, 0},   // Right
+//        {-1, -1}, // Left-Up
+//        {1, 1},   // Right-Down
+//        {-1, 1},  // Left-Down
+//        {1, -1}   // Right-Up
+//    };
+//
+//    // Create a copy of the board to mark cells found in four in a row
+//    int copyBoard[19][19] = { 0 };
+//    for (int i = 0; i < 19; i++) {
+//        for (int j = 0; j < 19; j++) {
+//            copyBoard[i][j] = board[i][j];
+//        }
+//    }
+//
+//    for (int row = 0; row < 19; row++) {
+//        for (int col = 0; col < 19; col++) {
+//            for (int dir = 0; dir < 8; dir++) {
+//                int dr = directions[dir][0];
+//                int dc = directions[dir][1];
+//
+//                // Check for consecutive stones in the current direction
+//                int consecutiveSum = 0;
+//                // Check five stones to identify game completion
+//                for (int i = 0; i < 5; i++) {
+//                    int newRow = row + i * dr;
+//                    int newCol = col + i * dc;
+//
+//                    if (newRow >= 0 && newRow < 19 && newCol >= 0 && newCol < 19 && copyBoard[newRow][newCol] == symbol) {
+//                        consecutiveSum++;
+//                    } else {
+//                        // Reset the count if a non-symbol stone is encountered or if out of bounds
+//                        consecutiveSum = 0; 
+//                    }
+//
+//                    if (consecutiveSum == 4) {
+//                        count++;
+//                        // Mark the cells in the copy as 0
+//                        for (int j = 0; j < 4; j++) {
+//                            int markRow = row + j * dr;
+//                            int markCol = col + j * dc;
+//                            copyBoard[markRow][markCol] = 0;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    return count;
+//}
 int Board::countFour(int symbol) {
-    int count = 0;
+    int directions[4][2] = { {0, 1}, {1, 0}, {1, 1}, {1, -1} };
+    int totalCount = 0;
 
-    // Define directions for all eight possible directions (up, down, left, right, and diagonals)
-    int directions[][2] = {
-        {0, -1},  // Up
-        {0, 1},   // Down
-        {-1, 0},  // Left
-        {1, 0},   // Right
-        {-1, -1}, // Left-Up
-        {1, 1},   // Right-Down
-        {-1, 1},  // Left-Down
-        {1, -1}   // Right-Up
-    };
-
-    // Create a copy of the board to mark cells found in four in a row
-    int copyBoard[19][19] = { 0 };
     for (int i = 0; i < 19; i++) {
         for (int j = 0; j < 19; j++) {
-            copyBoard[i][j] = board[i][j];
-        }
-    }
+            for (int d = 0; d < 4; d++) {
+                int dx = directions[d][0];
+                int dy = directions[d][1];
+                int count = 0;
+                int x = i, y = j;
 
-    for (int row = 0; row < 19; row++) {
-        for (int col = 0; col < 19; col++) {
-            for (int dir = 0; dir < 8; dir++) {
-                int dr = directions[dir][0];
-                int dc = directions[dir][1];
-
-                // Check for consecutive stones in the current direction
-                int consecutiveSum = 0;
-                // Check five stones to identify game completion
-                for (int i = 0; i < 5; i++) {
-                    int newRow = row + i * dr;
-                    int newCol = col + i * dc;
-
-                    if (newRow >= 0 && newRow < 19 && newCol >= 0 && newCol < 19 && copyBoard[newRow][newCol] == symbol) {
-                        consecutiveSum++;
-                    } else {
-                        // Reset the count if a non-symbol stone is encountered or if out of bounds
-                        consecutiveSum = 0; 
+                for (int step = 0; step < 5; step++) {
+                    if (x < 0 || x >= 19 || y < 0 || y >= 19) {
+                        break;
                     }
-
-                    if (consecutiveSum == 4) {
+                    if (board[x][y] == symbol) {
                         count++;
-                        // Mark the cells in the copy as 0
-                        for (int j = 0; j < 4; j++) {
-                            int markRow = row + j * dr;
-                            int markCol = col + j * dc;
-                            copyBoard[markRow][markCol] = 0;
-                        }
+                        x += dx;
+                        y += dy;
                     }
+                    else {
+                        break;
+                    }
+                }
+
+                if (count == 4) {
+                    totalCount++;
                 }
             }
         }
-
     }
 
-    return count;
+    return totalCount;
 }

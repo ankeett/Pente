@@ -16,7 +16,6 @@ public:
 	void calculateScores(Board& B);
 	void printScores() const;
 
-
 	int getHumanScore() const {
 		return humanScore;
 	}

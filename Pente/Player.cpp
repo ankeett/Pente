@@ -90,7 +90,9 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
 
                     bestCase = strategy.evaluateAllCases(B, 1);
                 }
-                cout << "The best move is " << (char)(bestCase.second + 'A') << bestCase.first << endl;
+
+
+                cout << "The best move is " << (char)(bestCase.second + 'A') << (20-bestCase.first) << endl;
 
                 cin.clear();
                 cout << "Enter your move (e.g., K10):";
@@ -130,7 +132,7 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
         // Convert first character to uppercase
         char colChar = move[0]; 
         // Convert row number and adjust to 0-based
-        int row = std::stoi(move.substr(1));
+        int row = 20- stoi(move.substr(1));
         // Convert column character to index
         int col = colChar - 'A';
 
@@ -243,6 +245,7 @@ Assistance Received: None
 void ComputerPlayer::makeMove(Board& B, int moveCount) {
     do {
         string move;
+        string showMove;
         int row, col;
         if (moveCount == 1) {
             cout << "The first move is always in the center of the board." << endl;
@@ -265,11 +268,16 @@ void ComputerPlayer::makeMove(Board& B, int moveCount) {
 
                 bestMove = strategy.evaluateAllCases(B, 2);
             }
-            row = bestMove.first;
+            row = 20- bestMove.first;
             col = bestMove.second;
 
             char colChar = 'A' + col;
+
+            //move is already changed in placeStone
             move = std::string(1, colChar) + std::to_string(row); 
+            cout<<"move is "<<move<<endl;
+            
+            //row = 20- row;
 
             if (moveCount == 3) {
                 if (!isThreePointsAway("J10", move)) {
@@ -278,7 +286,7 @@ void ComputerPlayer::makeMove(Board& B, int moveCount) {
             }
 
         }
-
+        row = 20- row;
         if (isValidMove(B, row, col)) {
             cout << "Computer's move: " << move << endl;
             B.placeStone(move, 'C');
