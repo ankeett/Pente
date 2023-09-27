@@ -9,9 +9,30 @@ public:
 
 	~Strategy();
 
+	void setPlayerScore(int score) {
+		tempPlayerScore = score;
+	}
+
+	void setOpponentScore(int score) {
+		tempOpponentScore = score;
+	}
+
+	int getPlayerScore() const {
+		return tempPlayerScore;
+	}
+
+	int getOpponentScore() const {
+		return tempOpponentScore;
+	}
+
+
 	//evaluate all the possible cases and give best result
 	pair<int, int> evaluateAllCases(Board B, int playerSymbol);
 	pair<int,int> evaluateSecondMove(Board B, int playerSymbol);
+
+	pair<int,int> evaluateOffense(Board B, int playerSymbol);
+	pair<int,int> evaluateDefense(Board B, int playerSymbol);
+
 
 
 private:
@@ -27,4 +48,6 @@ private:
 	Board board;
 	int playerSymbol;
 
+	int tempPlayerScore = 0;
+	int tempOpponentScore = 0;
 };

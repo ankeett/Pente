@@ -81,6 +81,10 @@ void HumanPlayer::makeMove(Board& B, int moveCount) {
 
             if (move == "HELP") {
                 Strategy strategy(B, 1);
+                //set the scores to determine the strategy
+                strategy.setPlayerScore(B.getHumanCaptures());
+                strategy.setOpponentScore(B.getComputerCaptures());
+
                 pair<int, int> bestCase;
 
                 if(moveCount == 3){
@@ -256,6 +260,10 @@ void ComputerPlayer::makeMove(Board& B, int moveCount) {
         else {
 
             Strategy strategy(B,2);
+            //set the scores to determine the strategy
+            strategy.setPlayerScore(B.getComputerCaptures());
+            strategy.setOpponentScore(B.getHumanCaptures());
+
             pair<int, int> bestMove;
 
             if (moveCount == 3){
@@ -275,7 +283,6 @@ void ComputerPlayer::makeMove(Board& B, int moveCount) {
 
             //move is already changed in placeStone
             move = std::string(1, colChar) + std::to_string(row); 
-            cout<<"move is "<<move<<endl;
             
             //row = 20- row;
 

@@ -72,7 +72,6 @@ Algorithm:
 Assistance Received: None
 ********************************************************************* */
 void Board::placeStone(string move,char symbol) {
-    cout<<"move"<<move<<endl;
     // Convert first character to uppercase
     char colChar = toupper(move[0]);
     // Convert row number and adjust to 0-based
@@ -80,8 +79,6 @@ void Board::placeStone(string move,char symbol) {
     // Convert column character to index
 	int col = colChar - 'A'; 
     row = 20- row;
-    cout <<"row"<< row << endl;
-    cout <<"col"<< col << endl;
 
     //place the stone on the board according to the human and computer player's move
     if (symbol == 'H') {

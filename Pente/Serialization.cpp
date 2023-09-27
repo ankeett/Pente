@@ -137,7 +137,7 @@ void Serialization::readBoard(Board& B) {
 			}
 			// Increment the row counter
 			row++; 
-			if (row >= 19) {
+			if (row >= 20) {
 				break; 
 			}
 		}

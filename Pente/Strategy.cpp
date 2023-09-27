@@ -288,42 +288,22 @@ pair<int, int> Strategy::evaluateAllCases(Board B, int playerSymbol) {
 		cout<<"Reason: Defending win"<<endl;
 		return defendingWin;
 	}
+	//int opponentSymbol = (playerSymbol == 1) ? 2 : 1;
+	
 
-	pair<int,int> defendingFour = defendFour(B, playerSymbol);
-	if (defendingFour.first != -1) {
-		cout<<"Reason: Defending four"<<endl;
-		return defendingFour;
+	//if the player is winning and there is a good defense move, return it
+	if  (getPlayerScore() > getOpponentScore()) {
+		pair<int,int> defenseMove = evaluateDefense(B,playerSymbol);
+		if (defenseMove.first != -1) {
+			return defenseMove;
+		}
 	}
 
-	pair<int, int> defendingCapture = defendCapture(B, playerSymbol);
-	if (defendingCapture.first != -1) {
-		cout<<"Reason: Defending capture"<<endl;
-		return defendingCapture;
-	}
-
-	pair<int, int> capturingOpponent = captureOpponent(B, playerSymbol);
-	if (capturingOpponent.first != -1) {
-		cout<<"Reason: Capturing opponent"<<endl;
-		return capturingOpponent;
-	}
-
-
-	pair<int, int> winningMove = findWinningMove(B, playerSymbol);
-	if (winningMove.first != -1) {
-		cout << "Reason: Winning move" << endl;
-		return winningMove;
-	}
-
-	pair<int,int> maxConsecutivePos = maxConsecutive(B, playerSymbol);
-	if (maxConsecutivePos.first != -1) {
-		cout<<"Reason: Trying to make Max consecutive"<<endl;
-		return maxConsecutivePos;
-	}
-
-	pair<int, int> centerPos = controlCenter(B, playerSymbol);
-	if (centerPos.first != -1) {
-		cout<<"Reason: Trying to control the center."<<endl;
-		return centerPos;
+	pair<int,int> offenseMove = evaluateOffense(B,playerSymbol);
+	//if no defense move is available, return the offense move or
+	//if the player is losing and there is a good offense move, return it
+	if (offenseMove.first != -1) {
+		return offenseMove;
 	}
 
 	cout<<"Reason: No good position available. Randomizing the move."<<endl;
@@ -331,6 +311,58 @@ pair<int, int> Strategy::evaluateAllCases(Board B, int playerSymbol) {
 
 }
 
+pair<int, int> Strategy::evaluateOffense(Board B, int playerSymbol) {
+	pair<int, int> capturingOpponent = captureOpponent(B, playerSymbol);
+	if (capturingOpponent.first != -1) {
+		cout << "Reason: Capturing opponent" << endl;
+		return capturingOpponent;
+	}
+
+	//if no offense move is available, return the defense move
+	pair<int,int> defenseMove = evaluateDefense(B,playerSymbol);
+	if (defenseMove.first != -1) {
+		return defenseMove;
+	}
+
+	pair<int, int> winningMove = findWinningMove(B, playerSymbol);
+	if (winningMove.first != -1) {
+		cout << "Reason: Winning move" << endl;
+		return winningMove;
+	}
+
+	pair<int, int> maxConsecutivePos = maxConsecutive(B, playerSymbol);
+	if (maxConsecutivePos.first != -1) {
+		cout << "Reason: Trying to make Max consecutive" << endl;
+		return maxConsecutivePos;
+	}
+
+	pair<int, int> centerPos = controlCenter(B, playerSymbol);
+	if (centerPos.first != -1) {
+		cout << "Reason: Trying to control the center." << endl;
+		return centerPos;
+	}
+
+	return make_pair(-1, -1);
+}
+
+pair<int, int> Strategy::evaluateDefense(Board B, int playerSymbol) {
+
+	pair<int, int> defendingCapture = defendCapture(B, playerSymbol);
+	if (defendingCapture.first != -1) {
+		cout << "Reason: Defending capture" << endl;
+		return defendingCapture;
+	}
+
+	pair<int, int> defendingFour = defendFour(B, playerSymbol);
+	if (defendingFour.first != -1) {
+		cout << "Reason: Defending four" << endl;
+		return defendingFour;
+	}
+
+
+	return make_pair(-1, -1);
+
+}
 
 /*********************************************************************
 Function Name: Strategy::evaluateSecondMove

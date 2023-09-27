@@ -241,23 +241,33 @@ void Round::calculateScores(Board& B) {
     //find total number of 4 in a row except for 5 in a row 
     //search every row and col values
     //if there is 4 in a row, then add 1 to the score
-    cout<<"Human 4 in a row:" << B.countFour(1) << endl;
-    cout<<"Computer 4 in a row:" << B.countFour(2) << endl;
 
-    setHumanScore(B.getHumanCaptures() + B.countFour(1));
-    setComputerScore(B.getComputerCaptures() + B.countFour(2));
+    int humanFour = B.countFour(1);
+    int computerFour = B.countFour(2);
+
+
+
+    setHumanScore(B.getHumanCaptures());
+    setComputerScore(B.getComputerCaptures() );
 
     //the getWinner gives the 5 in a row player
     if (B.getWinner() != 0) {
         if (B.getWinner() == 1) {
             setWinner(1);
             setHumanScore(getHumanScore() + 5);
+            humanFour--;
         }
 		else {
             setWinner(2);
 			setComputerScore(getComputerScore() + 5);
+            computerFour--;
         }
     }
+    cout<<"-------------------------------------------------------" << endl;
+    cout<<"Human 4 in a row:" << humanFour<< endl;
+    cout<<"Computer 4 in a row:" << computerFour << endl;
+    setHumanScore(getHumanScore() + humanFour);
+    setComputerScore(getComputerScore() + computerFour);
 
 }
 

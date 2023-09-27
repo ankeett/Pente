@@ -412,7 +412,8 @@ Algorithm:
 Assistance Received: None
 ********************************************************************* */
 void Tournament::announceWinner() const {
-	
+	cout << "-----------------------------------" << endl;
+	cout<<"Tournament Results" << endl;
 	if(getHumanScores() > getComputerScores()) {
 		cout << "Congratulations! You won the tournament!" << endl;
 	} else if (getHumanScores() < getComputerScores()) {
