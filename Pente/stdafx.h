@@ -10,6 +10,9 @@
 #include <ctime>
 #include <iomanip>
 #include <cctype>
+#include <vector>
+#include <map>
+#include <regex>
 
 
 

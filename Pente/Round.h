@@ -1,29 +1,123 @@
 #pragma once
-#include "stdafx.h"
+
 #include "Board.h"
 #include "Player.h"
+#include "Serialization.h"
 
 class Round {
 public:
-	Round();
+	Round(Player * playerList[2]);
 	~Round();
 
-	void startRound(Board B, Player& human, Player& computer);
-	bool checkWin(Board B, Player& human, Player& computer);
-	void checkCapture(Board B, Player& human, Player& computer);
-	void checkFive(Board B, Player& human, Player& computer);
-	void checkThree(Board B, Player& human, Player& computer);
-	void checkFour(Board B, Player& human, Player& computer);
-	void checkOpenFour(Board B, Player& human, Player& computer);
-	void checkOpenThree(Board B, Player& human, Player& computer);
-	void checkOpenTwo(Board B, Player& human, Player& computer);
-	void checkOpenOne(Board B, Player& human, Player& computer);
-	void checkClosedFour(Board B, Player& human, Player& computer);
-	void checkClosedThree(Board B, Player& human, Player& computer);
-	void checkClosedTwo(Board B, Player& human, Player& computer);
-	
-	void calculateScore(Board B, Player& human, Player& computer);
+	void startMenu();
+	void continueMenu();
+	void startGame(Board& B);
+	void continueGame(Board& B);
+	void calculateScores(Board& B);
+	void printScores() const;
 
-	private:
-		
+	int getHumanScore() const {
+		return humanScore;
+	}
+
+	int getComputerScore() const {
+		return computerScore;
+	}
+
+	void setHumanScore(int score) {
+		humanScore = score;
+	}
+
+	void setComputerScore(int score) {
+		computerScore = score;
+	}
+
+	void setWinner(int winner) {
+		this->winner = winner;
+	}
+
+	int getWinner() const {
+		return winner;
+	}
+
+
+	//quit the tournament or not
+	bool quitTournament() const {
+		return quit;
+	}
+
+	void setQuit(bool quit) {
+		this->quit = quit;
+	}
+
+	void setHumanColor(char color) {
+			humanColor = color;
+	}
+
+	char getHumanColor() const {
+		return humanColor;
+	}
+
+	void setCurrentPlayerIndex(int index) {
+			currentPlayerIndex = index;
+	}
+
+	int getCurrentPlayerIndex() const {
+		return currentPlayerIndex;
+	}
+
+	Board getBoard() const {
+		return B;
+	}
+
+	int getHumanCapture() const {
+		return B.getHumanCaptures();
+	}
+
+	int getComputerCapture() const {
+		return B.getComputerCaptures();
+	}
+
+
+
+	//for serialization scores
+	int getTournamentHumanScore() const {
+		return tournamentHumanScore;
+	}
+
+	int getTournamentComputerScore() const {
+		return tournamentComputerScore;
+	}
+
+	void setTournamentHumanScore(int score) {
+		tournamentHumanScore = score;
+	}
+
+	void setTournamentComputerScore(int score) {
+		tournamentComputerScore = score;
+	}
+
+private:
+	Board B;
+	Player* playerList[2];
+
+	//scores
+	int humanScore = 0;
+	int computerScore = 0;	
+
+
+	//needed while getting tournament score from Serialization
+	int tournamentHumanScore = 0;
+	int tournamentComputerScore = 0;
+	
+	int winner = 0;
+
+	char humanColor = ' ';
+
+	//quit the tournament or not
+	bool quit = false;
+
+
+	//white player is always at index 0
+	int currentPlayerIndex = 0;
 };

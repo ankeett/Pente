@@ -3,15 +3,13 @@
 */
 
 #include "stdafx.h"
-#include "Interface.h"
+#include "Tournament.h"
 
 
 int main(int argc, char* argv[]) {
-
-	Interface game ;
-
-	game.startMenu();
-
+	
+	Tournament T;
+	T.run();
 
 	return 0;
 }
